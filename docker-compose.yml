@@ -1,0 +1,36 @@
+version: "3.7"
+
+networks:
+  vact-nest-network:
+    name: app-tier
+
+services:
+  dev:
+    image: registry.gitlab-ce.cyadmk.com:5000/sysevt/vact-nest:${VACT_NEST_VERSION} # Consist with vact-nest version
+
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_PLATFORM=${APP_PLATFORM}
+
+    container_name: ${APP_NAME}
+
+    command: ["/vact-nest/entrypoint.sh"] # Execute entrypoint shell script in vact-nest project, which is setting serve mode
+
+    stdin_open: true
+    tty: true
+
+    networks:
+      - vact-nest-network
+
+    ports:
+      - "8080"
+
+    restart: always
+
+    volumes:
+      - type: bind
+        source: ${pwd}
+        target: /vact-nest/src
+
+    extra_hosts:
+      - "act.test:10.0.2.2" # Host virtual server
