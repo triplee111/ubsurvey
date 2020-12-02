@@ -1,5 +1,3 @@
-import { SectionState } from '../types'
-
 const sectionMock = [
   {
     id: 1,
