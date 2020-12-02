@@ -1,6 +1,6 @@
 <template lang="pug">
 AppHeader
-
+ActMain
 AppFooter
 
 BounceComponent(v-show="inProgress")
@@ -12,6 +12,7 @@ import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 
 import { AppHeader, AppFooter } from './components/layout'
+import ActMain from './view/ActMain.vue'
 
 import BounceComponent from './components/BounceLoading.vue'
 
@@ -26,6 +27,7 @@ export default defineComponent({
   },
   components: {
     AppHeader,
+    ActMain,
     AppFooter,
     BounceComponent
   }
