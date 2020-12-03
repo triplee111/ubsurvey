@@ -86,12 +86,12 @@ pipeline {
         sh '${JENKINS_HOME}/pipeline/script/sysevt/app.deploy.sh'
       }
     }
-    stage('Release') {
+   stage('Release') {
       when {
         tag pattern: 'v[0-9]*.[0-9]*.[0-9]*', comparator: 'REGEXP'
       }
       steps {
-        sh '${JENKINS_HOME}/pipeline/script/test.release.sh'
+        sh '${JENKINS_HOME}/pipeline/script/sysevt/app.release.sh'
       }
     }
   }
