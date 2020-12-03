@@ -28,26 +28,26 @@ pipeline {
             '''
           }
 
-          if (env.BRANCH_NAME == 'master') {
-            if (env.GITLAB_OBJECT_KIND == 'tag_push') {
-              sh '''
-                cd /vact-nest
-                ./entrypoint.sh
-                npm run build:production
-                '''
-            } else {
+          if (env.GITLAB_OBJECT_KIND == 'tag_push') {
+            sh '''
+              cd /vact-nest
+              ./entrypoint.sh
+              npm run build:production
+              '''
+          } else {
+            if (env.BRANCH_NAME == 'master') {
               sh '''
                 cd /vact-nest
                 ./entrypoint.sh
                 npm run build:staging
                 '''
+            } else {
+              sh '''
+                cd /vact-nest
+                ./entrypoint.sh
+                npm run build
+                '''
             }
-          } else {
-            sh '''
-              cd /vact-nest
-              ./entrypoint.sh
-              npm run build
-              '''
           }
         }
       }
@@ -86,7 +86,7 @@ pipeline {
         sh '${JENKINS_HOME}/pipeline/script/sysevt/app.deploy.sh'
       }
     }
-   stage('Release') {
+    stage('Release') {
       when {
         tag pattern: 'v[0-9]*.[0-9]*.[0-9]*', comparator: 'REGEXP'
       }
