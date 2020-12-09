@@ -41,6 +41,7 @@ export interface SectionState {
 
 export interface Survey {
   sections: SectionState[]
+  isVerified: boolean
 }
 
 export interface State extends RootState {

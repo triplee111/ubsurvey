@@ -20,7 +20,7 @@ const sectionMock = [
         id: 2,
         type: 2, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
         subject: '題目2',
-        isRequired: false,
+        isRequired: true,
         needOther: true,
         options: [
           '選項12',
@@ -73,7 +73,7 @@ const sectionMock = [
         id: 5,
         type: 4, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
         subject: '題目5',
-        isRequired: false,
+        isRequired: true,
         needOther: false,
         options: [
           '選項41',

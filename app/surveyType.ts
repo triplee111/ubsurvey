@@ -4,6 +4,7 @@ export interface QuestionPost {
   id: number
   answers: Nullable<number[]>
   context: string
+  showError: boolean
 }
 
 export interface SurveyPost {

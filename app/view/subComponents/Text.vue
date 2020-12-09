@@ -1,7 +1,7 @@
 <template lang="pug">
 .answerBlock
   input(type="text" :value="context"
-    @input="$emit('update:context', $event.target.value)"
+    @input="handleInput"
   )
 </template>
 <script lang="ts">
@@ -17,6 +17,16 @@ export default defineComponent({
     context: {
       type: String,
       default: null
+    }
+  },
+  setup(props, { emit }) {
+    const handleInput = (e: Event) => {
+      const target = e.target as HTMLInputElement
+      emit('update:context', target.value)
+      emit('update:showError', false)
+    }
+    return {
+      handleInput
     }
   }
 })

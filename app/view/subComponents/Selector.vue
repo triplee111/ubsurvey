@@ -27,6 +27,7 @@ export default defineComponent({
     const selected = ref('')
     const handleChange = () => {
       emit('update:answers', [selected.value])
+      emit('update:showError', false)
     }
     return {
       selected,

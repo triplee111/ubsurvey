@@ -5,7 +5,8 @@ import { sectionMock } from '../../mock'
 const GET_SURVEY = 'GET_SURVEY' // 取得問卷內容
 
 const state: Survey = {
-  sections: []
+  sections: [],
+  isVerified: true
 }
 
 const mutations: MutationTree<typeof state> = {
@@ -16,7 +17,12 @@ const mutations: MutationTree<typeof state> = {
 
 const actions: ActionTree<typeof state, State> = {
   getSurvey: async ({ commit }) => {
+    // TODO: call api and assign to state.sections
     commit(GET_SURVEY, sectionMock)
+  },
+  postSurvey: async({ commit }, formData) => {
+    // TODO: post api and check verification
+    console.log(formData)
   }
 }
 

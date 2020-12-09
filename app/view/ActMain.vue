@@ -1,22 +1,18 @@
 <template lang="pug">
 #actMain
-#webView
+  Survey
   ModalContainer
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import ModalContainer, { useModal } from '@act/slime-modal'
+import { defineComponent } from 'vue'
+import ModalContainer from '@act/slime-modal'
+import Survey from './Survey.vue'
 
 export default defineComponent({
   name: 'ActMain',
-  setup() {
-    const modal = useModal()
-    modal.show('Survey')
-    return {
-    }
-  },
   components: {
-    ModalContainer
+    ModalContainer,
+    Survey
   }
 })
 </script>

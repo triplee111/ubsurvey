@@ -1,29 +1,58 @@
-body
-  .vact-modal-wrapper.with-mask
-    background-color: transparent
-  
-  // 覆蓋 scrollbar sass
-  #modalSurvey
-    .scrollContainer
-      &.ps--active-y
-        .ps__rail-y
-          .ps__thumb-y
-            background-color: #093f33
-      .answerBlock
-        display: flex
-        align-items: center
-        justify-content: flex-start
-        flex-wrap: wrap
-        width: 100%
-        padding: 0 5%
-        input[type="text"]
-          border-bottom: 1px solid #424343
-        .options
-          padding: 0 20px
-          input
-            margin-right: 5px
-        >input
-          width: 100%
-        > select
-          width: 150px
-          border-radius: 4px
+#ModalConfirm
+  position: relative
+  width: 408px
+  height: 251px
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  +setImgBg('modal-bg.jpg')
+  background-size: cover
+  color: #1b5245
+  font-weight: bold
+  font-size: 1.5rem
+  img
+    position: absolute
+    max-width: unset
+    &.material
+      top: -96px
+      left: -64px
+      width: 540px
+      pointer-events: none
+    &.modalClose
+      top: -47px
+      right: -58px
+      cursor: pointer
+    &.poker
+      top: -87px
+      left: -80px
+      z-index: -1
+  >p
+    display: flex
+    flex-direction: column
+  .goback
+    margin-top: 20px
+    padding: 0 1rem
+    line-height: 2
+    color: #fff
+    border-radius: 4px
+    font-size: 1.2rem
+    background: linear-gradient(to bottom, #1e4f44, #1a6a58)
+    cursor: pointer
+  +iphone-width
+    width: 80vmin
+    height: 49vmin
+    font-size: 1.2rem
+    img
+      &.material
+        width: 106vmin
+        top: -38%
+        left: -16%
+      &.modalClose
+        width: 12vmin
+        top: -25%
+        right: -10%
+      &.poker
+        width: 28vmin
+        top: -31%
+        left: -17%

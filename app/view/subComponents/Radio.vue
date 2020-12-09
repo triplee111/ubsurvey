@@ -47,6 +47,7 @@ export default defineComponent({
     const text = ref('')
     const handleChange = () => {
       emit('update:answers', [active.value])
+      emit('update:showError', false)
       if (!includeOther.value) {
         text.value = ''
         emit('update:context', '')
