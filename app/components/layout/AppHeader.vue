@@ -50,28 +50,23 @@
 
     section
       a.logo(target="_blank" href="#")
-
-        SvgIcon.svg-icon(name="ubLogo")
+        img(:src="require('@img/m-menu-title.png')")
 
       ul.links
         //- External activity links
         li.actLinks(
           v-for="list in actLinks"
-          :key="list.path")
+          :key="list.star")
           a(@click="isShowSidebar = false")
-            span {{ list.title }}
+            img(:src="require(`@img/m-menu-${list.text}.png`)")
+            img(:src="require(`@img/icon-${list.icon}.png`)")
 
         //- Fixed links
-        li.txt-yellow
+        li.txt-white
           a(v-for="item in headerLinks"
             target="_blank"
             :href="item.url")
             span {{ item.title }}
-
-      .header-loginBtn(
-        v-if="!account"
-        @click="showModal('login')")
-        img(width="125" src="@img/loginBtn.png")
 
 </template>
 
@@ -114,7 +109,12 @@ export default defineComponent({
         svg: 'home'
       },
       {
-        title: '线上客服',
+        title: '优博客服',
+        url: csLink,
+        svg: 'headset'
+      },
+      {
+        title: 'QQ客服',
         url: csLink,
         svg: 'headset'
       },
@@ -127,20 +127,20 @@ export default defineComponent({
 
     const actLinks = [
       {
-        hook: '1',
-        title: '瑞兔闯金关'
+        text: 'text1',
+        icon: 'money'
       },
       {
-        hook: '1',
-        title: '抢位赏银花'
+        text: 'text2',
+        icon: 'pen'
       },
       {
-        hook: '2',
-        title: '传递浓情意'
+        text: 'text3',
+        icon: 'royal'
       },
       {
-        hook: '3',
-        title: '全民大鸿包'
+        text: 'text4',
+        icon: 'star'
       }
     ]
 
@@ -320,7 +320,7 @@ svg[class*="icon"]
   color: #f0dcbc
   svg[class*="icon"]
     width: 2rem
-    fill: #f8e884
+    fill: #fff
   .coverlay
     display: none
     position: fixed
@@ -335,23 +335,19 @@ svg[class*="icon"]
     width: 1em
     top: 5%
     font-size: 4vmin
-    color: #f8e884
+    color: #fff
     svg
       width: 1em
       margin-bottom: .5em
   .logo
     display: block
     padding: 10px 0
-    svg
-      display: block
-      width: 10em
-      height: 2em
-      line-height: 3em
-      margin: 0 auto
-      fill: #f8e884
+    background-color: #181818
+    img
+      height: 48px
   section
     position: relative
-    background: $mbMenuBg
+    background-color: #072d19
     color: #ffffff
     overflow-y: auto
     height: 100%
@@ -360,17 +356,10 @@ svg[class*="icon"]
     height: calc(100% - 8em)
     overflow-y: auto
     text-align: center
-    background-color: $mbMenuBg
     .actLinks
-      span
-        color: #000
-        font-weight: bold
-        font-size: 4.5vmin
-        letter-spacing: 2px
-    img
-      +phone-width
-        width: 5vmin
-        height: 5vmin
+      img
+        margin: 0 10px 0 0
+        height: 24px
     a
       display: block
       padding: 1em
@@ -388,18 +377,20 @@ svg[class*="icon"]
         margin: 0 .5em
         fill: #fff
     li
-      &.txt-yellow
+      &.txt-white
         margin-top: 2vmin
         a > span
-          color: #f8e884
+          color: #fff
           font-weight: bold
-          font-size: 4.5vmin
+          font-size: 1.5rem
       &.actLinks
         font-weight: 700
-        background: $mbActBg
-        border-top: 1px solid #000
+        background: #181818
         margin: 0 auto
         color: #ffffff
+        &:first-child,
+        &:nth-child(3)
+          border-bottom: 1px solid #e1d192
       svg
         margin-right: .5em
   .loginBox
