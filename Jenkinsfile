@@ -16,7 +16,7 @@ pipeline {
       agent {
         docker {
           image "registry.gitlab-ce.cyadmk.com:5000/docker/vact-nest:${VACT_NEST_VERSION}"
-          args "-v ${WORKSPACE}:/vact-nest/src --env APP_NAME=${APP_NAME} --env APP_PLATFORM=${APP_PLATFORM}"
+          args "-v ${WORKSPACE}/app:/vact-nest/src/app --env APP_NAME=${APP_NAME} --env APP_PLATFORM=${APP_PLATFORM} -u root:root"
         }
       }
       steps {
@@ -28,26 +28,26 @@ pipeline {
             '''
           }
 
-          if (env.BRANCH_NAME == 'master') {
-            if (env.GITLAB_OBJECT_KIND == 'tag_push') {
-              sh '''
-                cd /vact-nest
-                ./entrypoint.sh
-                npm run build:production
-                '''
-            } else {
+          if (env.GITLAB_OBJECT_KIND == 'tag_push') {
+            sh '''
+              cd /vact-nest
+              ./entrypoint.sh
+              npm run build:production
+              '''
+          } else {
+            if (env.BRANCH_NAME == 'master') {
               sh '''
                 cd /vact-nest
                 ./entrypoint.sh
                 npm run build:staging
                 '''
+            } else {
+              sh '''
+                cd /vact-nest
+                ./entrypoint.sh
+                npm run build
+                '''
             }
-          } else {
-            sh '''
-              cd /vact-nest
-              ./entrypoint.sh
-              npm run build
-              '''
           }
         }
       }
