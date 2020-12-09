@@ -16,7 +16,7 @@ pipeline {
       agent {
         docker {
           image "registry.gitlab-ce.cyadmk.com:5000/docker/vact-nest:${VACT_NEST_VERSION}"
-          args "-v ${WORKSPACE}:/vact-nest/src --env APP_NAME=${APP_NAME} --env APP_PLATFORM=${APP_PLATFORM}"
+          args "-v ${WORKSPACE}/app:/vact-nest/src/app --env APP_NAME=${APP_NAME} --env APP_PLATFORM=${APP_PLATFORM} -u root:root"
         }
       }
       steps {
