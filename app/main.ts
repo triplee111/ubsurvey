@@ -18,9 +18,7 @@ const EXTERNAL_LINKS = {
   testLink: '#',
   epayLink: '#',
   bonusLink: '#',
-  termsLink: '#',
-  act1Link: 'https://new.ub727.com/ub/xmaslot', // 聖誕拉霸
-  act2Link: 'https://new.ub727.com/ub/xmasav' // 聖誕AV
+  termsLink: '#'
 }
 
 const app = createApp(App)
