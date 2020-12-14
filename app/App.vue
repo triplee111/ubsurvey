@@ -1,11 +1,9 @@
 <template lang="pug">
 AppHeader
 
-ActMain
+SurveyMain
 
 AppFooter
-
-ModalContainer
 
 BounceComponent(v-show="inProgress")
 
@@ -17,7 +15,6 @@ import { useStore } from 'vuex'
 
 import { AppHeader, AppFooter } from './components/layout'
 import SurveyMain from './views/SurveyMain.vue'
-import ModalContainer from '@act/slime-modal'
 import BounceComponent from './components/BounceLoading.vue'
 
 export default defineComponent({
@@ -30,9 +27,8 @@ export default defineComponent({
   },
   components: {
     AppHeader,
-    ActMain,
+    SurveyMain,
     AppFooter,
-    ModalContainer,
     BounceComponent
   }
 })

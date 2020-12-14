@@ -1,30 +1,34 @@
 <template lang="pug">
 .answerBlock
-  .options(v-for="(option, i) in question.options" :key="option")
-    input(type="radio" :id="option"
+  .options(
+    v-for="(option, i) in question.options"
+    :key="option")
+    input(
+      v-model="active"
+      type="radio"
+      :id="option"
       :value="i"
-      v-model="active"
-      @change="handleChange"
-    )
+      @change="handleChange")
     label(:for="option") {{ option }}
+
   .options(v-if="question.needOther")
-    input(type="radio" :id="`${question.id}-其他`"
-      :value="question.options.length"
+    input(
       v-model="active"
-      @change="handleChange"
-    )
+      type="radio"
+      :id="`${question.id}-其他`"
+      :value="question.options.length"
+      @change="handleChange")
+
     label(:for="`${question.id}-其他`") 其他
-      input(type="text" v-model="text"
-        @input="handleInput"
-      )
+      input(
+        v-model="text"
+        type="text"
+        @input="handleInput")
+
 </template>
+
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  toRefs
-} from 'vue'
+import { defineComponent, ref, computed, toRefs } from 'vue'
 
 export default defineComponent({
   name: 'Radio',
@@ -45,6 +49,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const active = ref('')
     const text = ref('')
+
     const handleChange = () => {
       emit('update:answers', [active.value])
       emit('update:showError', false)
@@ -55,17 +60,18 @@ export default defineComponent({
         emit('update:context', text.value)
       }
     }
-    const {
-      question
-    } = toRefs(props)
+
+    const { question } = toRefs(props)
     const l = question.value.options?.length || -1
     const includeOther = computed(() => active.value === l)
+
     const handleInput = (e: Event) => {
       if (includeOther.value) {
         const target = e.target as HTMLInputElement
         emit('update:context', target.value)
       }
     }
+
     return {
       active,
       text,

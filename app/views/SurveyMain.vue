@@ -1,39 +1,56 @@
 <template lang="pug">
 #actMain
   form#survey(@submit="handleOnSubmit")
+
   .title 填问卷 豪礼三选一
   .subTitle 礼品、彩金、高额存送任您挑
+
   .scrollContainer(v-perfect-scroll)
-    .section(v-for="(section, si) in sections" :key="section.id"
-      :class="si === currentStep ? 'show' : 'hide'"
-    )
+    .section(
+      v-for="(section, si) in sections"
+      :key="section.id"
+      :class="si === currentStep ? 'show' : 'hide'")
+
       .titleBlock(v-if="!si")
         .mbTitle 填问卷 豪礼三选一
         .mbSubTitle 礼品、彩金、高额存送任您挑
+
       .sectionTitle {{ section.title }}
+
       .description {{ section.description }}
-      .questionBlock(v-for="(question, qi) in section.questions" :key="question.id")
+
+      .questionBlock(
+        v-for="(question, qi) in section.questions"
+        :key="question.id")
         p {{ `Q${qi + 1} ${question.subject}` }}
           strong(v-if="question.isRequired") *
+          //- TODO: error handler
           span.errorMessage(v-if="formData[si].questions[qi].showError") 此栏位为必填栏位
-        component(:is="inputType[question.type]"
+
+        //- TODO: dynamic question components
+        component(
+          :is="inputType[question.type]"
           :question="question"
           v-model:answers="formData[si].questions[qi].answers"
           v-model:context="formData[si].questions[qi].context"
-          v-model:showError="formData[si].questions[qi].showError"
-        )
+          v-model:showError="formData[si].questions[qi].showError")
+
     .buttonBlock
-      button.prev(type="button"
+      //- mobile only
+      button.prev(
         v-show="currentStep !== 0"
-        @click="changeStep(currentStep - 1)"
-      ) 上一步
-      button.next(type="button"
+        type="button"
+        @click="changeStep(currentStep - 1)") 上一步
+      button.next(
         v-show="currentStep !== sections.length - 1"
-        @click="checkValidateByStep()"
-      ) 下一步
-      button(type="submit"
-        :class="{isSubmitShow: currentStep === sections.length - 1}"
-      ) 提交
+        type="button"
+        @click="checkValidateByStep()") 下一步
+
+      button(
+        type="submit"
+        :class="{ isSubmitShow: currentStep === sections.length - 1 }") 提交
+
+ModalContainer
 
 </template>
 
@@ -41,7 +58,8 @@
 import { defineComponent, computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { SurveyPost, QuestionPost } from '@/surveyType'
-import { useModal } from '@act/slime-modal'
+import ModalContainer, { useModal } from '@act/slime-modal'
+
 import Checkbox from './subComponents/Checkbox.vue'
 import Radio from './subComponents/Radio.vue'
 import Selector from './subComponents/Selector.vue'
@@ -148,10 +166,12 @@ export default defineComponent({
     Checkbox,
     Radio,
     Selector,
-    Text
+    Text,
+    ModalContainer
   }
 })
 </script>
+
 <style lang="sass" scoped>
 @import '../assets/css/_variable'
 #survey
