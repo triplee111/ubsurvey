@@ -57,8 +57,9 @@ ModalContainer
 <script lang="ts">
 import { defineComponent, computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import { SurveyPost, QuestionPost } from '@/surveyType'
 import ModalContainer, { useModal } from '@act/slime-modal'
+
+import { SurveyPost, QuestionPost } from '@/types'
 
 import Checkbox from './subComponents/Checkbox.vue'
 import Radio from './subComponents/Radio.vue'
@@ -69,9 +70,13 @@ export default defineComponent({
   name: 'Survey',
   setup() {
     const store = useStore()
+
     store.dispatch('survey/getSurvey')
+
     const sections = computed(() => store.state.survey.sections)
+
     const tmp: SurveyPost[] = []
+
     sections.value.forEach(section => {
       const questions: QuestionPost[] = []
       section.questions.forEach(question => {
@@ -90,6 +95,7 @@ export default defineComponent({
       }
       tmp.push(obj)
     })
+
     const modal = useModal()
     const formData = reactive(tmp)
     const inputType = {
@@ -145,6 +151,7 @@ export default defineComponent({
 
     const handleOnSubmit = async (e: Event) => {
       e.preventDefault()
+
       if (checkAllValidate()) {
         await store.dispatch('survey/postSurvey', formData)
         modal.show('Confirm')
