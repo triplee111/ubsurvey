@@ -1,5 +1,6 @@
 <template lang="pug">
-form#survey(@submit="handleOnSubmit")
+#actMain
+  form#survey(@submit="handleOnSubmit")
   .title 填问卷 豪礼三选一
   .subTitle 礼品、彩金、高额存送任您挑
   .scrollContainer(v-perfect-scroll)
@@ -33,14 +34,11 @@ form#survey(@submit="handleOnSubmit")
       button(type="submit"
         :class="{isSubmitShow: currentStep === sections.length - 1}"
       ) 提交
+
 </template>
+
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  ref
-} from 'vue'
+import { defineComponent, computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
 import { SurveyPost, QuestionPost } from '@/surveyType'
 import { useModal } from '@act/slime-modal'
@@ -59,9 +57,7 @@ export default defineComponent({
     sections.value.forEach(section => {
       const questions: QuestionPost[] = []
       section.questions.forEach(question => {
-        const {
-          id
-        } = question
+        const { id } = question
         const q = {
           id, // question id
           answers: [], // QType: 1、2、4 時，資料型態為 array
@@ -91,10 +87,7 @@ export default defineComponent({
       const arr: boolean[] = []
       formData.forEach((data, i) => {
         data.questions.forEach((q, qi) => {
-          const {
-            isRequired,
-            type
-          } = sections.value[i].questions[qi]
+          const { isRequired, type } = sections.value[i].questions[qi]
           if (isRequired) {
             let status = !!q.answers?.length
             if (type === 3) {
@@ -111,10 +104,9 @@ export default defineComponent({
     const checkValidateByStep = () => {
       const arr: boolean[] = []
       formData[currentStep.value].questions.forEach((q, qi) => {
-        const {
-          isRequired,
-          type
-        } = sections.value[currentStep.value].questions[qi]
+        const { isRequired, type } = sections.value[
+          currentStep.value
+        ].questions[qi]
         if (isRequired) {
           let status = !!q.answers?.length
           if (type === 3) {
