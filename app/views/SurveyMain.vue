@@ -61,10 +61,10 @@ import ModalContainer, { useModal } from '@act/slime-modal'
 
 import { SurveyPost, QuestionPost } from '@/types'
 
-import Checkbox from './subComponents/Checkbox.vue'
-import Radio from './subComponents/Radio.vue'
-import Selector from './subComponents/Selector.vue'
-import Text from './subComponents/Text.vue'
+import Checkbox from '@/components/question/QueCheckbox.vue'
+import Radio from '@/components/question/QueRadio.vue'
+import Selector from '@/components/question/QueSelector.vue'
+import Text from '@/components/question/QueInputText.vue'
 
 export default defineComponent({
   name: 'Survey',
