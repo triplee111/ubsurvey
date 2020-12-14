@@ -20,7 +20,7 @@ const actions: ActionTree<typeof state, State> = {
     // TODO: call api and assign to state.sections
     commit(GET_SURVEY, sectionMock)
   },
-  postSurvey: async({ commit }, formData) => {
+  postSurvey: async (unknown, formData) => {
     // TODO: post api and check verification
     console.log(formData)
   }
