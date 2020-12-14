@@ -1,54 +1,53 @@
 <template lang="pug">
 #actMain
   form#survey(@submit="handleOnSubmit")
+    .title 填问卷 豪礼三选一
+    .subTitle 礼品、彩金、高额存送任您挑
 
-  .title 填问卷 豪礼三选一
-  .subTitle 礼品、彩金、高额存送任您挑
+    .scrollContainer(v-perfect-scroll)
+      .section(
+        v-for="(section, si) in sections"
+        :key="section.id"
+        :class="si === currentStep ? 'show' : 'hide'")
 
-  .scrollContainer(v-perfect-scroll)
-    .section(
-      v-for="(section, si) in sections"
-      :key="section.id"
-      :class="si === currentStep ? 'show' : 'hide'")
+        .titleBlock(v-if="!si")
+          .mbTitle 填问卷 豪礼三选一
+          .mbSubTitle 礼品、彩金、高额存送任您挑
 
-      .titleBlock(v-if="!si")
-        .mbTitle 填问卷 豪礼三选一
-        .mbSubTitle 礼品、彩金、高额存送任您挑
+        .sectionTitle {{ section.title }}
 
-      .sectionTitle {{ section.title }}
+        .description {{ section.description }}
 
-      .description {{ section.description }}
+        .questionBlock(
+          v-for="(question, qi) in section.questions"
+          :key="question.id")
+          p {{ `Q${qi + 1} ${question.subject}` }}
+            strong(v-if="question.isRequired") *
+            //- TODO: error handler
+            span.errorMessage(v-if="formData[si].questions[qi].showError") 此栏位为必填栏位
 
-      .questionBlock(
-        v-for="(question, qi) in section.questions"
-        :key="question.id")
-        p {{ `Q${qi + 1} ${question.subject}` }}
-          strong(v-if="question.isRequired") *
-          //- TODO: error handler
-          span.errorMessage(v-if="formData[si].questions[qi].showError") 此栏位为必填栏位
+          //- TODO: dynamic question components
+          component(
+            v-model:answers="formData[si].questions[qi].answers"
+            v-model:context="formData[si].questions[qi].context"
+            v-model:showError="formData[si].questions[qi].showError"
+            :is="inputType[question.type]"
+            :question="question")
 
-        //- TODO: dynamic question components
-        component(
-          :is="inputType[question.type]"
-          :question="question"
-          v-model:answers="formData[si].questions[qi].answers"
-          v-model:context="formData[si].questions[qi].context"
-          v-model:showError="formData[si].questions[qi].showError")
+      .buttonBlock
+        //- mobile only
+        button.prev(
+          v-show="currentStep !== 0"
+          type="button"
+          @click="changeStep(currentStep - 1)") 上一步
+        button.next(
+          v-show="currentStep !== sections.length - 1"
+          type="button"
+          @click="checkValidateByStep()") 下一步
 
-    .buttonBlock
-      //- mobile only
-      button.prev(
-        v-show="currentStep !== 0"
-        type="button"
-        @click="changeStep(currentStep - 1)") 上一步
-      button.next(
-        v-show="currentStep !== sections.length - 1"
-        type="button"
-        @click="checkValidateByStep()") 下一步
-
-      button(
-        type="submit"
-        :class="{ isSubmitShow: currentStep === sections.length - 1 }") 提交
+        button(
+          type="submit"
+          :class="{ isSubmitShow: currentStep === sections.length - 1 }") 提交
 
 ModalContainer
 
