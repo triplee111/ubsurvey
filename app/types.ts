@@ -22,14 +22,13 @@ export interface RootState {
 }
 
 /** survey interface */
-type Nullable<T> = T | null
 export interface QuestionState {
   id: number
   type: number
   subject: string
   isRequired: boolean
   needOther: boolean
-  options: Nullable<string[]>
+  options: string[]
 }
 
 export interface SectionState {
@@ -47,4 +46,16 @@ export interface Survey {
 export interface State extends RootState {
   auth: AuthState
   survey: Survey
+}
+
+export interface QuestionPost {
+  id: number
+  answers: number[]
+  context: string
+  showError: boolean
+}
+
+export interface SurveyPost {
+  id: number
+  questions: QuestionPost[]
 }
