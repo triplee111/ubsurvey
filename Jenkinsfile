@@ -28,7 +28,7 @@ pipeline {
             '''
           }
 
-          if (env.GITLAB_OBJECT_KIND == 'tag_push') {
+          if (env.TAG_NAME) {
             sh '''
               cd /vact-nest
               ./entrypoint.sh
