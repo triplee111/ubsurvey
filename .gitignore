@@ -30,3 +30,6 @@ tsconfig.json
 /utils
 shims-module.d.ts
 shims-vue.d.ts
+
+package-lock.json
+package.json
