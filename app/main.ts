@@ -8,6 +8,8 @@ import { InitResolve } from './types'
 
 import App from './App.vue'
 import store from './store'
+import router from './router'
+import { registerSurveyComponent } from './survey/register'
 
 import actService from '@/repository/activity'
 
@@ -20,6 +22,20 @@ const EXTERNAL_LINKS = {
   bonusLink: '#',
   termsLink: '#'
 }
+
+/**
+ * index 0 為後端設定的題目類型字串，index 1 為前台製定的元件名稱(kebab-case)
+ * 可依據需求自行調整與擴充
+ */
+const SubjectType = new Map([
+  ['radio-box', 'radio-box'],
+  ['check-box', 'check-box'],
+  ['metrix', 'metrix'],
+  ['text-input', 'text-input'],
+  ['slider', 'slider'],
+  ['quote', 'quote'],
+  ['divider', 'divider']
+])
 
 const app = createApp(App)
 
@@ -43,5 +59,10 @@ actService
       .provide('copy', '')
   })
   .finally(() => {
-    app.use(store).use(createModal('modal')).mount('#app')
+    app
+      .use(store)
+      .use(router)
+      .use(createModal('modal'))
+      .use(registerSurveyComponent(SubjectType, 'subject')) // async define subject component and inject map with type to component
+      .mount('#app')
   })
