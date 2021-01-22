@@ -21,41 +21,45 @@ export interface RootState {
   inProgress: boolean
 }
 
-/** survey interface */
-export interface QuestionState {
+// survey interface
+export interface Option {
   id: number
-  type: number
-  subject: string
-  isRequired: boolean
-  needOther: boolean
-  options: string[]
+  item: string
+  jumpTo?: number // 跳題
+  concatTo?: number // 接題
+}
+export interface Subject {
+  id: number
+  type: string
+  qno?: number
+  content: string
+  comment?: string
+  visible: boolean
+  validate: any // FIXME:
+  opts?: Option[]
 }
 
-export interface SectionState {
-  id: number
-  title: string
-  description: string
-  questions: QuestionState[]
+export type Survey = Subject[]
+
+// survey store interface
+interface SubjectState {
+  no: number
+  visible: boolean
+  validate: boolean
 }
 
-export interface Survey {
-  sections: SectionState[]
-  isVerified: boolean
+interface SubjectAnswer {
+  id: number
+  select?: number | number[]
+  inputs?: string
+}
+
+export interface SurveyState {
+  surveyState: SubjectState[]
+  surveyAns: SubjectAnswer[]
 }
 
 export interface State extends RootState {
   auth: AuthState
-  survey: Survey
-}
-
-export interface QuestionPost {
-  id: number
-  answers: number[]
-  context: string
-  showError: boolean
-}
-
-export interface SurveyPost {
-  id: number
-  questions: QuestionPost[]
+  survey: SurveyState
 }
