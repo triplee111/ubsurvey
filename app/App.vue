@@ -5,7 +5,7 @@ SurveyMain
 
 AppFooter
 
-BounceComponent(v-show="inProgress")
+BounceLoading(v-show="inProgress")
 
 </template>
 
@@ -15,7 +15,7 @@ import { useStore } from 'vuex'
 
 import { AppHeader, AppFooter } from './components/layout'
 import SurveyMain from './views/SurveyMain.vue'
-import BounceComponent from './components/BounceLoading.vue'
+import BounceLoading from './components/BounceLoading.vue'
 
 export default defineComponent({
   name: 'App',
@@ -29,7 +29,7 @@ export default defineComponent({
     AppHeader,
     SurveyMain,
     AppFooter,
-    BounceComponent
+    BounceLoading
   }
 })
 </script>
