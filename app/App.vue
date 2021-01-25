@@ -1,7 +1,8 @@
 <template lang="pug">
 AppHeader
 
-SurveyMain
+#actMain
+  SurveyMain
 
 AppFooter
 
@@ -14,7 +15,7 @@ import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 
 import { AppHeader, AppFooter } from './components/layout'
-import SurveyMain from './views/SurveyMain.vue'
+import SurveyMain from '@/views/SurveyMain.vue'
 import BounceLoading from './components/BounceLoading.vue'
 
 export default defineComponent({
