@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: "off" */
+
 export type ExternalLinks = { [porp: string]: string }
 
 export interface InitResolve {
@@ -22,12 +24,22 @@ export interface RootState {
 }
 
 // survey interface
+export interface IResizeCallBack {
+  (_device: string): void
+}
+
 export interface Option {
   id: number
   item: string
   jumpTo?: number // 跳題
   concatTo?: number // 接題
 }
+
+export interface ValidateClass {
+  required?: boolean
+  optsRange?: number[]
+}
+
 export interface Subject {
   id: number
   type: string
@@ -35,7 +47,7 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
-  validate: any // FIXME:
+  validate: ValidateClass
   opts?: Option[]
 }
 
