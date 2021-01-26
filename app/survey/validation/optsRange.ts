@@ -3,7 +3,7 @@ import { IVerify, ValidatorOptions } from '@/types'
 export default (
   fn: IVerify,
   opts: ValidatorOptions,
-  config?: boolean
+  config: number[]
 ): IVerify => {
   return (ans, errors = []) => {
     // break 開啟時，已有驗證錯誤就直接回傳
@@ -12,12 +12,14 @@ export default (
     }
 
     // 驗證規則
-    if ((ans.inputs === '' || ans.select?.length === 0) && config) {
-      const message = 'required'
-
+    if (
+      Array.isArray(ans.select) &&
+      (ans.select.length < config[0] || ans.select.length > config[0])
+    ) {
       errors?.push({
-        rule: 'required',
-        message
+        rule: 'optsRange',
+        message: 'range failed',
+        config
       })
 
       return fn(ans, errors)

@@ -1,19 +1,33 @@
-import * as methods from './validation'
+import { ValidateRules, IVerify, ValidatorOptions } from './../types'
+import * as vMethods from './validation'
 
-import { ValidateClass } from '@/types'
+const Validator: { verify: IVerify } = {
+  verify: (ans, errors = []) => {
+    if (!ans.inputs && !ans.select) {
+      throw new Error('Failed Answer')
+    }
 
-const Validator = () => {
-  let state = true
+    return errors
+  }
 }
 
-Validator.prototype.verify = (inputs: string, state: boolean) => {
-  return state
-}
+const getVMethodsByName = <T, U extends keyof T>(obj: T) => (key: U) => obj[key]
 
-export default (validateClass: ValidateClass) => {
-  let validator = Object.create(Validator)
+export const createValidator = (
+  rules: ValidateRules,
+  option: ValidatorOptions = { break: false }
+) => {
+  const validator: typeof Validator = Object.create(Validator)
 
-  validator.verify = methods.requried(validator.verify)
+  for (const [method, param] of Object.entries(rules)) {
+    if (Object.prototype.hasOwnProperty.call(vMethods, method)) {
+      const decorator = getVMethodsByName(vMethods)(
+        method as keyof ValidateRules
+      )
+
+      validator.verify = decorator(validator.verify, option, param)
+    }
+  }
 
   return validator
 }

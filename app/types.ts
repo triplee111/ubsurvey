@@ -35,9 +35,13 @@ export interface Option {
   concatTo?: number // 接題
 }
 
-export interface ValidateClass {
+export interface ValidateRules {
   required?: boolean
   optsRange?: number[]
+}
+
+export interface ValidatorOptions {
+  break: boolean
 }
 
 export interface Subject {
@@ -47,7 +51,7 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
-  validate: ValidateClass
+  validate: ValidateRules
   opts?: Option[]
 }
 
@@ -62,8 +66,17 @@ interface SubjectState {
 
 interface SubjectAnswer {
   id: number
-  select?: number | number[]
+  select?: number[]
   inputs?: string
+}
+
+type ErrorRecord = {
+  rule: string
+  message: string
+  config?: any
+}
+export interface IVerify {
+  (ans: SubjectAnswer, errors?: ErrorRecord[]): ErrorRecord[]
 }
 
 export interface SurveyState {
