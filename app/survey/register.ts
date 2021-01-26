@@ -22,8 +22,8 @@ export const registerSurveyComponent = (
 
         app.component(
           registerName,
-          defineAsyncComponent(() =>
-            import(`./subject/${compNameUpperCamelCase}.vue`)
+          defineAsyncComponent(
+            () => import(`./subject/${compNameUpperCamelCase}.vue`)
           )
         )
 

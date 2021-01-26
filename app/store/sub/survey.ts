@@ -1,30 +1,14 @@
 import { MutationTree, ActionTree } from 'vuex'
-import { Survey, State } from '../../types'
-import { sectionMock } from '../../mock'
+import { SurveyState, State } from '../../types'
 
-const GET_SURVEY = 'GET_SURVEY' // 取得問卷內容
-
-const state: Survey = {
-  sections: [],
-  isVerified: true
+const state: SurveyState = {
+  surveyState: [],
+  surveyAns: []
 }
 
-const mutations: MutationTree<typeof state> = {
-  [GET_SURVEY](state, res) {
-    state.sections = res
-  }
-}
+const mutations: MutationTree<typeof state> = {}
 
-const actions: ActionTree<typeof state, State> = {
-  getSurvey: async ({ commit }) => {
-    // TODO: call api and assign to state.sections
-    commit(GET_SURVEY, sectionMock)
-  },
-  postSurvey: async (unknown, formData) => {
-    // TODO: post api and check verification
-    console.log(formData)
-  }
-}
+const actions: ActionTree<typeof state, State> = {}
 
 export default {
   namespaced: true,
