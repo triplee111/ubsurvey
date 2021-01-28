@@ -44,6 +44,14 @@ export interface ValidatorOptions {
   break: boolean
 }
 
+export interface SubjectConfig {
+  optsUi?: 'radiobox' | 'menu'
+  optsColumn?: {
+    desktop: number
+    mobile: number
+  }
+}
+
 export interface Subject {
   id: number
   type: string
@@ -53,6 +61,7 @@ export interface Subject {
   visible: boolean
   validate: ValidateRules
   opts?: Option[]
+  config?: SubjectConfig
 }
 
 export type Survey = Subject[]
