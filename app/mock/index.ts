@@ -1,6 +1,6 @@
 import { Survey } from '@/types'
 
-const surveyData = [
+const surveyData: Survey = [
   {
     id: 1,
     qno: 1,
@@ -11,10 +11,13 @@ const surveyData = [
     validate: {
       required: true
     },
-    optsUi: 'radiobox',
-    optsColumn: {
-      desktop: 2,
-      mobile: 1
+    config: {
+      others: true,
+      optsUi: 'radiobox',
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
     },
     opts: [
       {
