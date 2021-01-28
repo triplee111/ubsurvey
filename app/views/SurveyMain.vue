@@ -13,7 +13,6 @@
       :survey="surveyData")
 
     //- TODO: suspend
-    //- component(is="radio-box")
 
     //- .buttonBlock
     //-   //- mobile only

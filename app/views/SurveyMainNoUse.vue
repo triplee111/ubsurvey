@@ -244,11 +244,13 @@ export default defineComponent({
       line-height: 1.5
       .titleBlock
         display: none
+
       .sectionTitle
         font-size: 20px
         border-bottom: 2px solid #093f33
       .description
         font-size: 16px
+
       .questionBlock
         color: #424343
         line-height: 2
@@ -258,6 +260,7 @@ export default defineComponent({
             color: red
           .errorMessage
             font-size: 0.8rem
+
     .buttonBlock
       display: flex
       align-items: center
@@ -275,6 +278,7 @@ export default defineComponent({
         &.prev,
         &.next
           display: none
+
   +pc-width
     width: 90%
     height: 90%
@@ -299,6 +303,7 @@ export default defineComponent({
             font-size: 1.5rem
           .mbSubTitle
             font-size: 1rem
+
       .buttonBlock
         >button
           margin: 0 0.5rem
