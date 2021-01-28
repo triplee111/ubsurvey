@@ -46,8 +46,8 @@ export default defineComponent({
       const jsxElement = (
         // @ts-expect-error
         <SubjectComponent
-          aria-label="subject"
-          class="subject-container"
+          aria-label="subject content"
+          class="subject"
           data-subject-id={`${subject.type}-${index + 1}`}
           context={subject}
           {...{
@@ -78,7 +78,7 @@ export default defineComponent({
         setup() {
           return () => (
             <div
-              aria-label="survey content"
+              aria-label="survey contentainer"
               class="survey-container survey-desktop"
             >
               {renderer.single}

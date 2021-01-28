@@ -1,20 +1,41 @@
 <template lang="pug">
-.questionBlock
-  p {{ `Q${context.qno} ${context.content}` }}
+section
+  .questionBlock
+    p {{ `Q${context.qno} ${context.content}` }}
 
-.questionBlock
-  p
-    strong *
-    span.errorMessage 此栏位为必填栏位
+  .questionBlock
+    p
+      strong *
+      span.errorMessage 此栏位为必填栏位
 
-.answerBlock
-  .options(
-    v-for="(opt, i) in context.opts"
-    :key="`${context.id}-opt-${i + 1}`")
-    input(
-      :id="opt.id"
-      type="checkbox")
-    label(:for="opt.item") {{ opt.item }}
+  .answerBlock(v-if="config.optsUi === 'radiobox'")
+    .options(
+      v-for="(opt, key) in opts"
+      :key="`${qid}-opt-${key + 1}`")
+      input(
+        :id="`${qid}-radio-${key + 1}`"
+        :value="opt.id"
+        type="radio")
+      label(:for="opt.item") {{ opt.item }}
+
+    .options(v-if="config.others")
+      input(
+        :id="`${qid}-text-input`"
+        type="text")
+
+  .answerBlock(v-else-if="config.optsUi === 'menu'")
+    .options
+      select
+        option(
+          v-for="(opt, key) in opts"
+          :key="`${qid}-opt-${key + 1}`"
+          :value="opt.id")
+          | {{ opt.item }}
+
+    .options(v-if="config.others")
+      input(
+        :id="`${qid}-text-input`"
+        type="text")
 
 </template>
 
@@ -30,13 +51,19 @@ export default defineComponent({
   props: {
     context: Object as PropType<Subject>
   },
-  setup() {
+  setup(props) {
     const v = createValidator({
       required: true,
       optsRange: [2, 5]
     })
 
     v.verify({ id: 5, select: [] })
+
+    return {
+      qid: props.context?.id,
+      opts: props.context?.opts,
+      config: props.context?.config
+    }
   }
 })
 </script>
@@ -58,20 +85,18 @@ export default defineComponent({
   justify-content: flex-start
   flex-wrap: wrap
   width: 100%
-  padding: 0 5%
-  input[type="text"]
-    border-bottom: 1px solid #424343
+
   .options
     padding: 0 20px
+
     input
       margin-right: 5px
-    label
-      input[type="text"]
-        width: 100px
+
+      &[type="text"]
+        border-bottom: 1px solid #424343
         margin-left: 5px
-  > input
-    width: 100%
-  > select
-    width: 150px
-    border-radius: 4px
+
+    > select
+      width: 150px
+      border-radius: 4px
 </style>
