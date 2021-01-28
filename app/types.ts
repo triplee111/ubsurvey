@@ -45,6 +45,7 @@ export interface ValidatorOptions {
 }
 
 export interface SubjectConfig {
+  others?: boolean
   optsUi?: 'radiobox' | 'menu'
   optsColumn?: {
     desktop: number
