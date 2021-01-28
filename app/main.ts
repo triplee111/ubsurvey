@@ -28,8 +28,8 @@ const EXTERNAL_LINKS = {
  * 可依據需求自行調整與擴充
  */
 const SubjectType = new Map([
-  ['radio-box', 'radio-box'],
-  ['check-box', 'check-box'],
+  ['choice', 'choice'],
+  ['multi-answer', 'multi-answer'],
   ['metrix', 'metrix'],
   ['text-input', 'text-input'],
   ['slider', 'slider'],
