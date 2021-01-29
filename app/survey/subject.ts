@@ -1,5 +1,5 @@
 import { useStore } from 'vuex'
-import { computed, watch, ref, Ref, onMounted } from 'vue'
+import { computed, watch, ref, Ref } from 'vue'
 
 import { Subject, SubjectAnswer, ErrorRecord } from '@/types'
 import { createValidator } from '@/survey/validator'
