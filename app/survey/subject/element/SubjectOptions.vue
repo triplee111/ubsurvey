@@ -46,7 +46,7 @@ export default defineComponent({
     },
     config: Object as PropType<SubjectConfig>
   },
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const selected = ref(0)
 
     watch(selected, value => emit('select', value))
