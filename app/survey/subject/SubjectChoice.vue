@@ -40,7 +40,7 @@ export default defineComponent({
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (selected: number) => h.reply({ select: [selected] })
+    const answer = (value: number) => h.reply({ select: [value] })
 
     return {
       // static

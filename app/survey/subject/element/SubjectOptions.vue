@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 
 import { Option, SubjectConfig } from '@/types'
 
@@ -46,9 +46,13 @@ export default defineComponent({
     },
     config: Object as PropType<SubjectConfig>
   },
-  setup() {
+  setup(props, { emit }) {
+    const selected = ref(0)
+
+    watch(selected, value => emit('select', value))
+
     return {
-      selected: ref(0)
+      selected
     }
   }
 })
