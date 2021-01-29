@@ -13,12 +13,7 @@ export default (
 
     // 驗證規則
     if ((ans.inputs === '' || ans.select?.length === 0) && config) {
-      const message = 'required'
-
-      errors?.push({
-        rule: 'required',
-        message
-      })
+      errors?.push({ rule: 'required' })
 
       return fn(ans, errors)
     }

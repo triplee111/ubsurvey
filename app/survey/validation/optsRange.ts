@@ -18,7 +18,6 @@ export default (
     ) {
       errors?.push({
         rule: 'optsRange',
-        message: 'range failed',
         config
       })
 

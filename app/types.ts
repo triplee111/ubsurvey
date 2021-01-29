@@ -68,21 +68,13 @@ export interface Subject {
 export type Survey = Subject[]
 
 // survey store interface
-interface SubjectState {
-  no: number
-  visible: boolean
-  validate: boolean
-}
-
-interface SubjectAnswer {
-  id: number
+export interface SubjectAnswer {
   select?: number[]
   inputs?: string
 }
 
-type ErrorRecord = {
+export type ErrorRecord = {
   rule: string
-  message: string
   config?: any
 }
 export interface IVerify {
@@ -90,8 +82,9 @@ export interface IVerify {
 }
 
 export interface SurveyState {
-  surveyState: SubjectState[]
-  surveyAns: SubjectAnswer[]
+  validation: { [qid: string]: boolean }
+  visibility: { [qid: string]: boolean }
+  surveyAns: { [qid: string]: SubjectAnswer }
 }
 
 export interface State extends RootState {
