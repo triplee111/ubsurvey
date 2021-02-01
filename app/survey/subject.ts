@@ -10,6 +10,9 @@ export default (subject: Subject) => {
 
   const errors: Ref<ErrorRecord[]> = ref([])
 
+  const visibility = computed(() => store.state.survey.visibility[qid])
+  const answer = computed(() => store.state.survey.surveyAns[qid])
+
   const visible = (payload: { qid: string; state: boolean }) => {
     store.dispatch('survey/visible', payload)
   }
@@ -18,8 +21,9 @@ export default (subject: Subject) => {
     store.dispatch('survey/answer', { qid, ans })
   }
 
-  const visibility = computed(() => store.state.survey.visibility[qid])
-  const answer = computed(() => store.state.survey.surveyAns[qid])
+  const anchor = () => {
+    store.dispatch('survey/anchor', subject.id)
+  }
 
   if (subject.validate) {
     const v = createValidator(subject.validate)
@@ -36,6 +40,7 @@ export default (subject: Subject) => {
     visibility,
     errors,
     reply,
-    visible
+    visible,
+    anchor
   }
 }

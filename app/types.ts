@@ -86,6 +86,7 @@ export interface SurveyState {
   validation: { [qid: string]: boolean }
   visibility: { [qid: string]: boolean }
   surveyAns: { [qid: string]: SubjectAnswer }
+  subjectFlag: number
 }
 
 export interface State extends RootState {
