@@ -7,7 +7,7 @@ import { Survey } from '@/types'
 import _windowSizeObserver from './utils/window-size-observer'
 import { useComponentsMap } from './register'
 
-let paginations: number[][] = [[]]
+const paginations: number[][] = [[]]
 
 export default defineComponent({
   name: 'SurveyContainer',
@@ -132,7 +132,7 @@ export default defineComponent({
 
         router.addRoute(multiPageRouterRecord)
 
-        if ( flag.value === -1) {
+        if (flag.value === -1) {
           router.push({ name: 'page1', params: { pno } })
           return
         }
