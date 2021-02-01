@@ -2,6 +2,16 @@ import { Survey } from '@/types'
 
 const surveyData: Survey = [
   {
+    id: 8,
+    content: '段落標題',
+    comment: '',
+    type: 'quote',
+    visible: true,
+    config: {
+      quote: '段落說明'
+    }
+  },
+  {
     id: 1,
     qno: 1,
     content: '題目1',
@@ -39,6 +49,16 @@ const surveyData: Survey = [
     ]
   },
   {
+    id: 10,
+    content: '段落標題二',
+    comment: '',
+    type: 'quote',
+    visible: true,
+    config: {
+      quote: '段落說明二'
+    }
+  },
+  {
     id: 2,
     qno: 2,
     content: '題目2',
@@ -58,19 +78,19 @@ const surveyData: Survey = [
     },
     opts: [
       {
-        id: 1,
+        id: 3,
         item: '選項1'
       },
       {
-        id: 2,
+        id: 4,
         item: '選項2'
       },
       {
-        id: 5,
+        id: 6,
         item: '選項3'
       },
       {
-        id: 8,
+        id: 7,
         item: '選項4'
       }
     ]
@@ -94,19 +114,19 @@ const surveyData: Survey = [
     },
     opts: [
       {
-        id: 1,
+        id: 10,
         item: '選項1'
       },
       {
-        id: 2,
+        id: 12,
         item: '選項2'
       },
       {
-        id: 5,
+        id: 15,
         item: '選項3'
       },
       {
-        id: 8,
+        id: 18,
         item: '選項4'
       }
     ]

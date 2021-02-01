@@ -51,6 +51,7 @@ export interface SubjectConfig {
     desktop: number
     mobile: number
   }
+  quote?: string
 }
 
 export interface Subject {
@@ -60,7 +61,7 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
-  validate: ValidateRules
+  validate?: ValidateRules
   opts?: Option[]
   config?: SubjectConfig
 }
