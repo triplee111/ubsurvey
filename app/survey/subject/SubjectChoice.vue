@@ -27,7 +27,7 @@ import RadioboxOpts from './element/SubjectRadioOpts.vue'
 import MenuOpts from './element/SubjectMenuOpts.vue'
 
 export default defineComponent({
-  name: 'Choice',
+  name: 'SubjectChoice',
   props: {
     context: {
       type: Object as PropType<Subject>,

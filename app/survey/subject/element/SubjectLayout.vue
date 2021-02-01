@@ -4,11 +4,11 @@ section
 
     slot(name="before")
 
-    .questionBlock
+    .questionBlock(v-if="$slots.question")
       //- TODO: question no
       slot(name="question")
 
-    .helperBlock
+    .helperBlock(v-if="$slots.helper")
       slot(name="helper")
 
     .optionBlock(v-if="$slots.option")

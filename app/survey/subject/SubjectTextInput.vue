@@ -41,7 +41,6 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
-      opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
       isShow: h?.visibility,
