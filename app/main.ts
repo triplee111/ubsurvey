@@ -29,7 +29,7 @@ const EXTERNAL_LINKS = {
  */
 const SubjectType = new Map([
   ['choice', 'choice'],
-  ['multi-answer', 'multi-answer'],
+  ['multi-answer', 'multi-ans'],
   ['metrix', 'metrix'],
   ['text-input', 'text-input'],
   ['slider', 'slider'],
