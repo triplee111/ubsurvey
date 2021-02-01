@@ -6,9 +6,10 @@ SubjectLayout(v-if="isShow")
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
-  template(#input)
+  template(#answer)
     input.subject-input-text-field(
       @input="answer"
+      @focusin="anchor"
       type="text")
 
 </template>
@@ -22,7 +23,7 @@ import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
 
 export default defineComponent({
-  name: 'Choice',
+  name: 'SubjectTextInput',
   props: {
     context: {
       type: Object as PropType<Subject>,
@@ -45,6 +46,7 @@ export default defineComponent({
       // reactive and methods
       isShow: h?.visibility,
       visible: h?.visible,
+      anchor: h?.anchor,
       helpeText: message,
       answer
     }

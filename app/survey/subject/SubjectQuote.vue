@@ -13,9 +13,6 @@ import { Subject } from '@/types'
 
 import SubjectLayout from './element/SubjectLayout.vue'
 
-import RadioboxOpts from './element/SubjectRadioOpts.vue'
-import MenuOpts from './element/SubjectMenuOpts.vue'
-
 export default defineComponent({
   name: 'SubjectQuote',
   props: {
@@ -32,9 +29,7 @@ export default defineComponent({
     }
   },
   components: {
-    SubjectLayout,
-    RadioboxOpts,
-    MenuOpts
+    SubjectLayout
   }
 })
 </script>
@@ -45,4 +40,5 @@ export default defineComponent({
   border-bottom 2px solid #093f33
 .description
   font-size 16px
+  margin-bottom 10px
 </style>

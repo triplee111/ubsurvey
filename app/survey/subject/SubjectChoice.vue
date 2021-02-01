@@ -6,7 +6,7 @@ SubjectLayout(v-if="isShow")
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
-  template(#option)
+  template(#answer)
     component(
       :is="getOptsUiComp()"
       :opts="opts"
@@ -43,7 +43,10 @@ export default defineComponent({
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: number) => h.reply({ select: [value] })
+    const answer = (value: number) => {
+      h.anchor()
+      h.reply({ select: [value] })
+    }
 
     const getOptsUiComp = () => {
       const ui = props.context.config?.optsUi
@@ -58,6 +61,7 @@ export default defineComponent({
       // reactive and methods
       isShow: h?.visibility,
       visible: h?.visible,
+      anchor: h?.anchor,
       helpeText: message,
       answer,
       getOptsUiComp

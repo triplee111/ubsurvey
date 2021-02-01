@@ -11,19 +11,20 @@ section
     .helperBlock(v-if="$slots.helper")
       slot(name="helper")
 
-    .optionBlock(v-if="$slots.option")
-      slot(name="option")
-
-    .inputBlock(v-if="$slots.input")
-      slot(name="input")
+    .answerBlock(v-if="$slots.answer")
+      slot(name="answer")
 
     slot(name="after")
 
 </template>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 section
+  margin 15px 0
   line-height 2
+
+  &:nth-child(1)
+    margin-top 0
 
   .questionBlock
     color #424343
@@ -32,8 +33,7 @@ section
     color #d43b27
     font-size 0.85rem
 
-  .optionBlock
-  .inputBlock
+  .answerBlock
     display flex
     align-items center
     justify-content flex-start

@@ -6,7 +6,7 @@ SubjectLayout(v-if="isShow")
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
-  template(#option)
+  template(#answer)
     CheckOpts(
       :opts="opts"
       :config="config"
@@ -39,7 +39,10 @@ export default defineComponent({
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: number) => h.reply({ select: [value] })
+    const answer = (value: number) => {
+      h.anchor()
+      h.reply({ select: [value] })
+    }
 
     return {
       // static
