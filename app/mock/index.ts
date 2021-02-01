@@ -49,6 +49,13 @@ const surveyData: Survey = [
     ]
   },
   {
+    id: 20,
+    content: '分隔線/分頁',
+    comment: '',
+    type: 'divider',
+    visible: true
+  },
+  {
     id: 10,
     content: '段落標題二',
     comment: '',
@@ -141,6 +148,13 @@ const surveyData: Survey = [
     validate: {
       required: true
     }
+  },
+  {
+    id: 28,
+    content: '分隔線/分頁',
+    comment: '',
+    type: 'divider',
+    visible: true
   }
 ]
 

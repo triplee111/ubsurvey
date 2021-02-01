@@ -1,10 +1,13 @@
-import { defineComponent, PropType, resolveComponent } from 'vue'
+import { defineComponent, PropType, resolveComponent, computed, provide } from 'vue'
+import { useStore } from 'vuex'
 import { RouterView, useRouter } from 'vue-router'
 
 import { Survey } from '@/types'
 
 import _windowSizeObserver from './utils/window-size-observer'
 import { useComponentsMap } from './register'
+
+let paginations: number[][] = [[]]
 
 export default defineComponent({
   name: 'SurveyContainer',
@@ -21,6 +24,7 @@ export default defineComponent({
     }
   },
   setup(props, { attrs }) {
+    const store = useStore()
     const router = useRouter()
     const compMap = useComponentsMap()
 
@@ -58,14 +62,18 @@ export default defineComponent({
 
       acc.single.push(jsxElement)
       acc.multi[page].push(jsxElement)
+      paginations[page].push(subject.id)
 
       if (subject.type === 'divider') {
         page++
         acc.multi.push([])
+        paginations.push([])
       }
 
       return acc
     }, defaults)
+
+    provide('paginations', paginations.filter(pids => pids.length > 0))
 
     /**
      * 因為有單頁(desktop)與分頁(mobile)兩種介面模式，這裡採用 vue-router 進行實作
@@ -88,36 +96,54 @@ export default defineComponent({
       }
     }
 
-    const multiPageRouterRecord = renderer.multi.reduce((acc, pageGroup, index) => {
-      (acc.children as any[]).push({
-        path: `/s/${index + 1}`,
-        name: `step${index + 1}`,
-        component: {
-          setup() {
-            return () => (
-              <div
-                aria-label="survey content"
-                class="survey-container survey-mobile"
-              >
-                {pageGroup}
-              </div>
-            )
+    const multiPageRouterRecord = renderer.multi
+      .filter(pageGroup => pageGroup.length !== 0)
+      .reduce((acc, pageGroup, index) => {
+        (acc.children as any[]).push({
+          path: `/s/${index + 1}`,
+          name: `page${index + 1}`,
+          component: {
+            setup() {
+              return () => (
+                <div
+                  aria-label="survey content"
+                  class="survey-container survey-mobile"
+                >
+                  {pageGroup}
+                </div>
+              )
+            }
           }
-        }
-      })
+        })
 
-      return acc
-    }, {
-      path: '/',
-      name: 'survey',
-      component: <router-view />,
-      children: []
-    })
+        return acc
+      }, {
+        path: '/',
+        name: 'survey',
+        component: <router-view />,
+        children: []
+      })
 
     _windowSizeObserver((device: string) => {
       if (device === 'mobile') {
+        let pno = 1
+
+        const flag = computed(() => store.state.survey.subjectFlag)
+
         router.addRoute(multiPageRouterRecord)
-        router.push({ name: 'step1' }) // TODO: push to specific flag
+
+        if ( flag.value === -1) {
+          router.push({ name: 'page1', params: { pno } })
+          return
+        }
+
+        for (const qids of paginations) {
+          if (qids.includes(flag.value)) {
+            router.push({ name: `page${pno}`, params: { pno } })
+            return
+          }
+          pno++
+        }
       } else {
         router.addRoute(singlePageRouterRecord)
         router.push({ name: 'survey' })
