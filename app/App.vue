@@ -1,9 +1,12 @@
 <template lang="pug">
 AppHeader
-ActMain
+
+#actMain
+  SurveyMain
+
 AppFooter
 
-BounceComponent(v-show="inProgress")
+BounceLoading(v-show="inProgress")
 
 </template>
 
@@ -12,24 +15,22 @@ import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 
 import { AppHeader, AppFooter } from './components/layout'
-import ActMain from './view/ActMain.vue'
-
-import BounceComponent from './components/BounceLoading.vue'
+import SurveyMain from '@/views/SurveyMain.vue'
+import BounceLoading from './components/BounceLoading.vue'
 
 export default defineComponent({
   name: 'App',
   setup() {
     const store = useStore()
-
     const inProgress = computed(() => store.state.inProgress)
 
     return { inProgress }
   },
   components: {
     AppHeader,
-    ActMain,
+    SurveyMain,
     AppFooter,
-    BounceComponent
+    BounceLoading
   }
 })
 </script>

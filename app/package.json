@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "@act/service-agent": "^0.1.4",
-    "@act/slime-modal": "^0.2.6"
-  },
-  "devDependencies": {}
+    "@act/service-agent": "^0.1.6",
+    "@act/slime-modal": "^0.2.7"
+  }
 }

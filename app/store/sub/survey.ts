@@ -1,28 +1,45 @@
 import { MutationTree, ActionTree } from 'vuex'
-import { Survey, State } from '../../types'
-import { sectionMock } from '../../mock'
+import { SurveyState, State, SubjectAnswer } from '@/types'
 
-const GET_SURVEY = 'GET_SURVEY' // 取得問卷內容
+const SET_VALIDATION = 'SET_VALIDATION'
+const SET_VISIBILITY = 'SET_VISIBILITY'
+const SET_ANSWER = 'SET_ANSWER'
+const SET_FLAG = 'SET_FLAG'
 
-const state: Survey = {
-  sections: [],
-  isVerified: true
+const state: SurveyState = {
+  validation: {},
+  visibility: {},
+  surveyAns: {},
+  subjectFlag: -1 // 題目旗標
 }
 
 const mutations: MutationTree<typeof state> = {
-  [GET_SURVEY](state, res) {
-    state.sections = res
+  [SET_VALIDATION](state, payload: { qid: string; state: boolean }) {
+    state.validation[payload.qid] = payload.state
+  },
+  [SET_VISIBILITY](state, payload: { qid: string; state: boolean }) {
+    state.visibility[payload.qid] = payload.state
+  },
+  [SET_ANSWER](state, { qid, ans }: { qid: string; ans: SubjectAnswer }) {
+    state.surveyAns[qid] = ans
+  },
+  [SET_FLAG](state, qid) {
+    state.subjectFlag = qid
   }
 }
 
 const actions: ActionTree<typeof state, State> = {
-  getSurvey: async ({ commit }) => {
-    // TODO: call api and assign to state.sections
-    commit(GET_SURVEY, sectionMock)
+  verify({ commit }, payload) {
+    commit(SET_VALIDATION, payload)
   },
-  postSurvey: async({ commit }, formData) => {
-    // TODO: post api and check verification
-    console.log(formData)
+  visible({ commit }, payload) {
+    commit(SET_VISIBILITY, payload)
+  },
+  answer({ commit }, payload) {
+    commit(SET_ANSWER, payload)
+  },
+  anchor({ commit }, qid) {
+    commit(SET_FLAG, qid)
   }
 }
 

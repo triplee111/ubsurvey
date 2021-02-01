@@ -1,97 +1,163 @@
-const sectionMock = [
+import { Survey } from '@/types'
+
+const surveyData: Survey = [
+  {
+    id: 8,
+    content: '段落標題',
+    comment: '',
+    type: 'quote',
+    visible: true,
+    config: {
+      quote: '段落說明'
+    }
+  },
   {
     id: 1,
-    title: '段落標題1',
-    description: '段落敘述1',
-    questions: [
+    qno: 1,
+    content: '題目1',
+    comment: '備註',
+    type: 'choice',
+    visible: true,
+    validate: {
+      required: true
+    },
+    config: {
+      others: true,
+      optsUi: 'radiobox',
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
+    },
+    opts: [
       {
         id: 1,
-        type: 1, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
-        subject: '題目1',
-        isRequired: true,
-        needOther: true,
-        options: [
-          '選項11',
-          '選項21',
-          '選項31'
-        ]
+        item: '選項1'
       },
       {
         id: 2,
-        type: 2, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
-        subject: '題目2',
-        isRequired: true,
-        needOther: true,
-        options: [
-          '選項12',
-          '選項22',
-          '選項32'
-        ]
+        item: '選項2'
+      },
+      {
+        id: 5,
+        item: '選項3'
+      },
+      {
+        id: 8,
+        item: '選項4'
       }
     ]
   },
   {
+    id: 20,
+    content: '分隔線/分頁',
+    comment: '',
+    type: 'divider',
+    visible: true
+  },
+  {
+    id: 10,
+    content: '段落標題二',
+    comment: '',
+    type: 'quote',
+    visible: true,
+    config: {
+      quote: '段落說明二'
+    }
+  },
+  {
     id: 2,
-    title: '段落標題2',
-    description: '段落敘述2',
-    questions: [
+    qno: 2,
+    content: '題目2',
+    comment: '備註',
+    type: 'choice',
+    visible: true,
+    validate: {
+      required: true
+    },
+    config: {
+      others: true,
+      optsUi: 'menu',
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
+    },
+    opts: [
       {
         id: 3,
-        type: 1, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
-        subject: '題目3',
-        isRequired: false,
-        needOther: false,
-        options: [
-          '選項221',
-          '選項222',
-          '選項223'
-        ]
+        item: '選項1'
+      },
+      {
+        id: 4,
+        item: '選項2'
+      },
+      {
+        id: 6,
+        item: '選項3'
+      },
+      {
+        id: 7,
+        item: '選項4'
       }
     ]
   },
   {
     id: 3,
-    title: '段落標題3',
-    description: '段落敘述3',
-    questions: [
+    qno: 3,
+    content: '題目3',
+    comment: '備註',
+    type: 'multi-answer',
+    visible: true,
+    validate: {
+      required: true
+    },
+    config: {
+      others: true,
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
+    },
+    opts: [
       {
-        id: 4,
-        type: 3, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
-        subject: '題目4',
-        isRequired: true,
-        needOther: false,
-        options: []
+        id: 10,
+        item: '選項1'
+      },
+      {
+        id: 12,
+        item: '選項2'
+      },
+      {
+        id: 15,
+        item: '選項3'
+      },
+      {
+        id: 18,
+        item: '選項4'
       }
     ]
   },
   {
     id: 4,
-    title: '段落標題4',
-    description: '段落敘述4',
-    questions: [
-      {
-        id: 5,
-        type: 4, // 1: 單選；2: 複選；3: 簡答；4: 下拉單選
-        subject: '題目5',
-        isRequired: true,
-        needOther: false,
-        options: [
-          '選項41',
-          '選項42',
-          '選項43',
-          '選項44',
-          '選項45',
-          '選項46',
-          '選項47',
-          '選項48',
-          '選項49',
-          '選項40'
-        ]
-      }
-    ]
+    qno: 4,
+    content: '題目4',
+    comment: '備註',
+    type: 'text-input',
+    visible: true,
+    validate: {
+      required: true
+    }
+  },
+  {
+    id: 28,
+    content: '分隔線/分頁',
+    comment: '',
+    type: 'divider',
+    visible: true
   }
 ]
 
-export {
-  sectionMock
-}
+export default new Promise(resolve => {
+  setTimeout(() => resolve(surveyData), 1000)
+}) as Promise<Survey>

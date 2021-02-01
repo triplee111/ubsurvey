@@ -1,67 +1,109 @@
 <template lang="pug">
-form#survey(@submit="handleOnSubmit")
-  .title 填问卷 豪礼三选一
-  .subTitle 礼品、彩金、高额存送任您挑
-  .scrollContainer(v-perfect-scroll)
-    .section(v-for="(section, si) in sections" :key="section.id"
-      :class="si === currentStep ? 'show' : 'hide'"
-    )
-      .titleBlock(v-if="!si")
-        .mbTitle 填问卷 豪礼三选一
-        .mbSubTitle 礼品、彩金、高额存送任您挑
-      .sectionTitle {{ section.title }}
-      .description {{ section.description }}
-      .questionBlock(v-for="(question, qi) in section.questions" :key="question.id")
-        p {{ `Q${qi + 1} ${question.subject}` }}
-          strong(v-if="question.isRequired") *
-          span.errorMessage(v-if="formData[si].questions[qi].showError") 此栏位为必填栏位
-        component(:is="inputType[question.type]"
-          :question="question"
-          v-model:answers="formData[si].questions[qi].answers"
-          v-model:context="formData[si].questions[qi].context"
-          v-model:showError="formData[si].questions[qi].showError"
-        )
-    .buttonBlock
-      button.prev(type="button"
-        v-show="currentStep !== 0"
-        @click="changeStep(currentStep - 1)"
-      ) 上一步
-      button.next(type="button"
-        v-show="currentStep !== sections.length - 1"
-        @click="checkValidateByStep()"
-      ) 下一步
-      button(type="submit"
-        :class="{isSubmitShow: currentStep === sections.length - 1}"
-      ) 提交
+#actMain
+  form#survey(@submit="handleOnSubmit")
+    .title 填问卷 豪礼三选一
+    .subTitle 礼品、彩金、高额存送任您挑
+
+    .scrollContainer(v-perfect-scroll)
+      .section
+
+        .titleBlock
+          .mbTitle 填问卷 豪礼三选一
+          .mbSubTitle 礼品、彩金、高额存送任您挑
+
+        //- TODO: 引言題
+        .subject
+          .sectionTitle {{ sections[0].title }}
+          .description {{ sections[0].description }}
+
+        //- TODO: 一般題
+        .subject(
+          v-for="(question, qi) in sections[0].questions"
+          :key="question.id")
+
+          .questionBlock
+            p {{ `Q${qi + 1} ${question.subject}` }}
+
+              //- TODO: error handler
+
+          .questionBlock
+            p
+              strong(v-if="question.isRequired") *
+              span.errorMessage(v-if="formData[0].questions[qi].showError") 此栏位为必填栏位
+
+          .answerBlock
+            .options(
+              v-for="(option, i) in question.options"
+              :key="option")
+              input(
+                type="checkbox"
+                :id="option")
+              label(:for="option") {{ option }}
+
+            .options(v-if="question.needOther")
+              input(
+                type="checkbox"
+                :id="`${question.id}-其他`"
+                :value="question.options.length")
+
+              label(:for="`${question.id}-其他`") 其他
+                input(type="text")
+
+            //- component(
+            //-   v-model:answers="formData[si].questions[qi].answers"
+            //-   v-model:context="formData[si].questions[qi].context"
+            //-   v-model:showError="formData[si].questions[qi].showError"
+            //-   :is="inputType[question.type]"
+            //-   :question="question")
+
+      //- TODO
+      .buttonBlock
+        //- mobile only
+        button.prev(
+          v-show="currentStep !== 0"
+          type="button"
+          @click="changeStep(currentStep - 1)") 上一步
+        button.next(
+          v-show="currentStep !== sections.length - 1"
+          type="button"
+          @click="checkValidateByStep()") 下一步
+
+      .buttonBlock
+        button(
+          type="submit"
+          :class="{ isSubmitShow: currentStep === sections.length - 1 }") 提交
+
+ModalContainer
+
 </template>
+
 <script lang="ts">
-import {
-  defineComponent,
-  computed,
-  reactive,
-  ref
-} from 'vue'
+import { defineComponent, computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import { SurveyPost, QuestionPost } from '@/surveyType'
-import { useModal } from '@act/slime-modal'
-import Checkbox from './subComponents/Checkbox.vue'
-import Radio from './subComponents/Radio.vue'
-import Selector from './subComponents/Selector.vue'
-import Text from './subComponents/Text.vue'
+import ModalContainer, { useModal } from '@act/slime-modal'
+
+import { SurveyPost, QuestionPost } from '@/types'
+
+import Checkbox from '@/components/question/QueCheckbox.vue'
+import Radio from '@/components/question/QueRadio.vue'
+import Selector from '@/components/question/QueSelector.vue'
+import Text from '@/components/question/QueInputText.vue'
 
 export default defineComponent({
   name: 'Survey',
   setup() {
     const store = useStore()
+
     store.dispatch('survey/getSurvey')
+
     const sections = computed(() => store.state.survey.sections)
+
     const tmp: SurveyPost[] = []
+
     sections.value.forEach(section => {
       const questions: QuestionPost[] = []
       section.questions.forEach(question => {
-        const {
-          id
-        } = question
+        const { id } = question
         const q = {
           id, // question id
           answers: [], // QType: 1、2、4 時，資料型態為 array
@@ -76,6 +118,7 @@ export default defineComponent({
       }
       tmp.push(obj)
     })
+
     const modal = useModal()
     const formData = reactive(tmp)
     const inputType = {
@@ -91,10 +134,7 @@ export default defineComponent({
       const arr: boolean[] = []
       formData.forEach((data, i) => {
         data.questions.forEach((q, qi) => {
-          const {
-            isRequired,
-            type
-          } = sections.value[i].questions[qi]
+          const { isRequired, type } = sections.value[i].questions[qi]
           if (isRequired) {
             let status = !!q.answers?.length
             if (type === 3) {
@@ -111,10 +151,9 @@ export default defineComponent({
     const checkValidateByStep = () => {
       const arr: boolean[] = []
       formData[currentStep.value].questions.forEach((q, qi) => {
-        const {
-          isRequired,
-          type
-        } = sections.value[currentStep.value].questions[qi]
+        const { isRequired, type } = sections.value[
+          currentStep.value
+        ].questions[qi]
         if (isRequired) {
           let status = !!q.answers?.length
           if (type === 3) {
@@ -135,6 +174,7 @@ export default defineComponent({
 
     const handleOnSubmit = async (e: Event) => {
       e.preventDefault()
+
       if (checkAllValidate()) {
         await store.dispatch('survey/postSurvey', formData)
         modal.show('Confirm')
@@ -156,10 +196,12 @@ export default defineComponent({
     Checkbox,
     Radio,
     Selector,
-    Text
+    Text,
+    ModalContainer
   }
 })
 </script>
+
 <style lang="sass" scoped>
 @import '../assets/css/_variable'
 #survey
@@ -169,7 +211,7 @@ export default defineComponent({
   justify-content: flex-start
   align-items: center
   width: 50%
-  height: 80%
+  height: 92%
   background: #fff
   padding: 10px
   border-radius: 8px
@@ -202,11 +244,13 @@ export default defineComponent({
       line-height: 1.5
       .titleBlock
         display: none
+
       .sectionTitle
         font-size: 20px
         border-bottom: 2px solid #093f33
       .description
         font-size: 16px
+
       .questionBlock
         color: #424343
         line-height: 2
@@ -216,6 +260,7 @@ export default defineComponent({
             color: red
           .errorMessage
             font-size: 0.8rem
+
     .buttonBlock
       display: flex
       align-items: center
@@ -233,6 +278,7 @@ export default defineComponent({
         &.prev,
         &.next
           display: none
+
   +pc-width
     width: 90%
     height: 90%
@@ -244,9 +290,9 @@ export default defineComponent({
       padding-right: 10%
       margin-right: unset
       .section
-        display: none
-        &.show
-          display: block
+        // display: none
+        // &.show
+        //   display: block
         .titleBlock
           display: flex
           flex-direction: column
@@ -257,6 +303,7 @@ export default defineComponent({
             font-size: 1.5rem
           .mbSubTitle
             font-size: 1rem
+
       .buttonBlock
         >button
           margin: 0 0.5rem
