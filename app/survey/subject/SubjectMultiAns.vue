@@ -7,8 +7,7 @@ SubjectLayout(v-if="isShow")
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#option)
-    component(
-      :is="getOptsUiComp()"
+    CheckOpts(
       :opts="opts"
       :config="config"
       @select="answer")
@@ -23,11 +22,10 @@ import { Subject } from '@/types'
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
 
-import RadioboxOpts from './element/SubjectRadioOpts.vue'
-import MenuOpts from './element/SubjectMenuOpts.vue'
+import CheckOpts from './element/SubjectCheckOpts.vue'
 
 export default defineComponent({
-  name: 'Choice',
+  name: 'SubjectMultiAns',
   props: {
     context: {
       type: Object as PropType<Subject>,
@@ -37,18 +35,11 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
-    // Container & Validator 不負責產生提示顯示文案
-    // 由個別元件控制或額外設定文案機制
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
     const answer = (value: number) => h.reply({ select: [value] })
-
-    const getOptsUiComp = () => {
-      const ui = props.context.config?.optsUi
-      return `${ui?.charAt(0).toUpperCase()}${ui?.slice(1)}Opts`
-    }
 
     return {
       // static
@@ -59,14 +50,12 @@ export default defineComponent({
       isShow: h?.visibility,
       visible: h?.visible,
       helpeText: message,
-      answer,
-      getOptsUiComp
+      answer
     }
   },
   components: {
     SubjectLayout,
-    RadioboxOpts,
-    MenuOpts
+    CheckOpts
   }
 })
 </script>

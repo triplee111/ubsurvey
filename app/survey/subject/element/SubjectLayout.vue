@@ -5,6 +5,7 @@ section
     slot(name="before")
 
     .questionBlock
+      //- TODO: question no
       slot(name="question")
 
     .helperBlock
@@ -12,6 +13,9 @@ section
 
     .optionBlock(v-if="$slots.option")
       slot(name="option")
+
+    .inputBlock(v-if="$slots.input")
+      slot(name="input")
 
     slot(name="after")
 
@@ -29,6 +33,7 @@ section
     font-size 0.85rem
 
   .optionBlock
+  .inputBlock
     display flex
     align-items center
     justify-content flex-start

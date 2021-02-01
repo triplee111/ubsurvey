@@ -1,23 +1,5 @@
 <template lang="pug">
 .optionBlock(
-  v-if="config.optsUi === 'radiobox'"
-  v-bind="$attrs")
-  .options(
-    v-for="(opt, key) in opts"
-    :key="`opt-${key + 1}`")
-    input(
-      v-model="selected"
-      :id="`radio-${key + 1}`"
-      :value="opt.id"
-      type="radio")
-    label(:for="opt.item") {{ opt.item }}
-
-  //- TODO: OTHERS
-  //- .options(v-if="config.others")
-  //-   input#others-input(type="text")
-
-.optionBlock(
-  v-else-if="config.optsUi === 'menu'"
   v-bind="$attrs")
   select.menu(v-model="selected")
     option(
@@ -38,7 +20,7 @@ import { defineComponent, PropType, ref, watch } from 'vue'
 import { Option, SubjectConfig } from '@/types'
 
 export default defineComponent({
-  name: 'SubjectOptions',
+  name: 'SubjectMenuOpts',
   props: {
     opts: {
       type: Object as PropType<Option[]>,
@@ -66,17 +48,12 @@ export default defineComponent({
   flex-wrap wrap
   width 100%
 
-  .options
-    padding-right: 20px
+  .menu
+    width 150px
+    border-radius 4px
 
     > input
-      margin-right: 5px
-
       &[type="text"]
-        border-bottom: 1px solid #424343
-        margin-left: 5px
-
-  .menu
-    width: 150px
-    border-radius: 4px
+        border-bottom 1px solid #424343
+        margin-left 5px
 </style>
