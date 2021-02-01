@@ -7,7 +7,7 @@ SubjectLayout(v-if="isShow")
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#input)
-    input(
+    input.subject-input-text-field(
       @input="answer"
       type="text")
 
@@ -55,3 +55,11 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="stylus">
+input
+  &[type="text"]
+  &.subject-input-text-field
+    border-bottom 1px solid #424343
+    width 100%
+</style>
