@@ -148,13 +148,6 @@ const surveyData: Survey = [
     validate: {
       required: true
     }
-  },
-  {
-    id: 28,
-    content: '分隔線/分頁',
-    comment: '',
-    type: 'divider',
-    visible: true
   }
 ]
 
