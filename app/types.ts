@@ -51,6 +51,10 @@ export interface SubjectConfig {
     desktop: number
     mobile: number
   }
+  optsRange?: {
+    min: number
+    max: number
+  }
   quote?: string
 }
 

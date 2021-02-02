@@ -8,14 +8,14 @@ SubjectLayout(v-if="isShow")
 
   template(#answer)
     input.subject-input-text-field(
-      @input="answer"
+      v-model.lazy="textInput"
       @focusin="anchor"
       type="text")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, ref, computed, watch } from 'vue'
 
 import { Subject } from '@/types'
 
@@ -31,13 +31,16 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const textInput = ref('')
+
     const h = useSubjectHandler(props.context)
 
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: number) => h.reply({ select: [value] })
+    const answer = (value: string) => h.reply({ inputs: value })
+    watch(textInput, value => answer(value))
 
     return {
       // static
@@ -48,7 +51,7 @@ export default defineComponent({
       visible: h?.visible,
       anchor: h?.anchor,
       helpeText: message,
-      answer
+      textInput
     }
   },
   components: {
