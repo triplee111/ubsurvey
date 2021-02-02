@@ -40,6 +40,9 @@ const actions: ActionTree<typeof state, State> = {
   },
   anchor({ commit }, qid) {
     commit(SET_FLAG, qid)
+  },
+  submit() {
+    // TODO: validation check && use submit service
   }
 }
 
