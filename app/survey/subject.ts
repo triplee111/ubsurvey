@@ -27,10 +27,23 @@ export default (subject: Subject) => {
 
   if (subject.validate) {
     const v = createValidator(subject.validate)
+
     watch(answer, (ans: SubjectAnswer) => {
       // 在沒有設定 break = true 的情況，每一次驗證會驗證該題設定的全部規則
       // 若目標規則有錯誤會產生一個錯誤物件，最後回傳一組錯誤物件陣列
       errors.value = v.verify(ans)
+    })
+
+    store.subscribeAction((action, state) => {
+      if (
+        action.type === 'survey/submit' &&
+        !Object.prototype.hasOwnProperty.call(state.survey.validation, qid)
+      ) {
+        errors.value = v.verify({
+          select: [],
+          inputs: ''
+        })
+      }
     })
   }
 
