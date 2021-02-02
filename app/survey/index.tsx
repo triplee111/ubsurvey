@@ -1,8 +1,11 @@
 import { defineComponent, PropType, resolveComponent, computed, provide } from 'vue'
 import { useStore } from 'vuex'
-import { RouterView, useRouter } from 'vue-router'
+import { RouterView, useRouter, RouteRecordRaw } from 'vue-router'
 
 import { Survey } from '@/types'
+
+import SubjectPagination from './subject/element/SubjectPagination.vue'
+import SubjectSubmit from './subject/element/SubjectSubmit.vue'
 
 import _windowSizeObserver from './utils/window-size-observer'
 import { useComponentsMap } from './register'
@@ -34,6 +37,7 @@ export default defineComponent({
       multi: [[]]
     }
     let page = 0 // 分頁記錄
+    const subjectNums = props.survey.length - 1
 
     /**
      * 此處的目的是希望依據問卷資料生成對應種類的題目元件，所以不會直接解析所有種類的元件或是預載範本資料
@@ -64,7 +68,11 @@ export default defineComponent({
       acc.multi[page].push(jsxElement)
       paginations[page].push(subject.id)
 
-      if (subject.type === 'divider') {
+      if (subject.type === 'divider' || index === subjectNums) {
+        acc.multi[page].push(<SubjectPagination />)
+      }
+
+      if (subject.type === 'divider' && index !== subjectNums) {
         page++
         acc.multi.push([])
         paginations.push([])
@@ -90,16 +98,17 @@ export default defineComponent({
               class="survey-container survey-desktop"
             >
               {renderer.single}
+              <SubjectSubmit />
             </div>
           )
         }
       }
     }
 
-    const multiPageRouterRecord = renderer.multi
+    const multiPageRouterRecord: RouteRecordRaw = renderer.multi
       .filter(pageGroup => pageGroup.length !== 0)
-      .reduce((acc, pageGroup, index) => {
-        (acc.children as any[]).push({
+      .reduce((acc: RouteRecordRaw, pageGroup, index) => {
+        acc.children?.push({
           path: `/s/${index + 1}`,
           name: `page${index + 1}`,
           component: {
@@ -123,6 +132,12 @@ export default defineComponent({
         component: <router-view />,
         children: []
       })
+
+    multiPageRouterRecord.children?.push({
+      path: '/s/submit',
+      name: 'submit',
+      component: SubjectSubmit // TODO: need wrapper page
+    })
 
     _windowSizeObserver((device: string) => {
       if (device === 'mobile') {
@@ -151,5 +166,8 @@ export default defineComponent({
     }, props.responseBoundary)
 
     return () => (<RouterView />)
+  },
+  components: {
+    SubjectSubmit
   }
 })
