@@ -14,14 +14,6 @@
 
     //- TODO: suspend
 
-    //- .buttonBlock
-    //-   //- mobile only
-    //-   button.prev(type="button") 上一步
-    //-   button.next(type="button") 下一步
-
-    //- .buttonBlock
-    //-   button(type="submit") 提交
-
 ModalContainer
 
 </template>
@@ -56,7 +48,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-@import '../assets/css/_variable'
+@import '@css/variable'
 #survey
   position: relative
   display: flex
@@ -99,24 +91,6 @@ export default defineComponent({
     .titleBlock
       display: none
 
-    // .buttonBlock
-    //   display: flex
-    //   align-items: center
-    //   justify-content: center
-    //   padding: 1rem 0
-    //   >button
-    //     width: 5rem
-    //     line-height: 2
-    //     color: #fff
-    //     border-radius: 4px
-    //     font-size: 1.2rem
-    //     font-weight: bold
-    //     background: linear-gradient(to bottom, #1e4f44, #1a6a58)
-    //     cursor: pointer
-    //     &.prev,
-    //     &.next
-    //       display: none
-
   +pc-width
     width: 90%
     height: 90%
@@ -142,12 +116,4 @@ export default defineComponent({
 
         .mbSubTitle
           font-size: 1rem
-
-      // .buttonBlock
-      //   >button
-      //     margin: 0 0.5rem
-      //     font-size: 1rem
-      //     &.prev,
-      //     &.next
-      //       display: block
 </style>
