@@ -2,6 +2,10 @@
 
 export type ExternalLinks = { [porp: string]: string }
 
+export type Obj = {
+  [key: string]: number
+}
+
 export interface InitResolve {
   actTitle: string
   links: ExternalLinks
