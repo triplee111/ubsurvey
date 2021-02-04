@@ -8,16 +8,17 @@ SubjectLayout(v-if="isShow")
 
   template(#answer)
     CheckOpts(
+      :qid="qid"
       :opts="opts"
       :config="config"
-      @select="answer")
+      @updateSelect="answer")
 
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 
-import { Subject } from '@/types'
+import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
@@ -39,9 +40,9 @@ export default defineComponent({
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: number) => {
+    const answer = (payload: SubjectAnswer) => {
       h.anchor()
-      h.reply({ select: [value] })
+      h.reply(payload)
     }
 
     return {
