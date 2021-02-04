@@ -2,7 +2,11 @@
 AppHeader
 
 #actMain
-  SurveyMain
+  Suspense
+    template(#default)
+      SurveyMain
+    template(#fallback)
+      BounceLoading
 
 AppFooter
 

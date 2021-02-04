@@ -29,12 +29,11 @@ import surveyService from '@/mock/index'
 
 export default defineComponent({
   name: 'SurveyMain',
-  setup() {
+  async setup() {
     const surveyData: Ref<Survey> = ref([])
 
-    surveyService.then(data => {
-      surveyData.value = data
-    })
+    const data = await surveyService
+    surveyData.value = data
 
     return {
       surveyData
