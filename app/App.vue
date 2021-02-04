@@ -7,6 +7,8 @@ AppHeader
       SurveyMain
     template(#fallback)
       BounceLoading
+        template(#msg)
+          p(style="color: #fff") Loading...
 
 AppFooter
 
