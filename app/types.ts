@@ -6,6 +6,12 @@ export type Obj = {
   [key: string]: number
 }
 
+export type DropdwonStyle = {
+  width: string
+  top: string
+  left: string
+}
+
 export interface InitResolve {
   actTitle: string
   links: ExternalLinks
@@ -69,6 +75,7 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
+  isQnoVisible: boolean
   validate?: ValidateRules
   opts?: Option[]
   config?: SubjectConfig
