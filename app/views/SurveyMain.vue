@@ -77,7 +77,7 @@ export default defineComponent({
 
   .subTitle
     font-size: 20px
-    margin-bottom: 40px
+    margin-bottom: 20px
 
   .scrollContainer
     position: relative

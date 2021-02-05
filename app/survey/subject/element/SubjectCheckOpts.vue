@@ -171,10 +171,11 @@ export default defineComponent({
         input[type="text"]
           width 100%
           padding 0.4rem
-          line-height 1.6
-          border-bottom 1px solid #F76C3E
+          line-height 1.5
+          border-bottom 1px solid #1a6a58
           font-weight normal
-
+          &:focus
+            border-color #F76C3E
     &:hover
       .checkmark
         border-color #1a6a58
