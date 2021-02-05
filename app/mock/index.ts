@@ -6,6 +6,7 @@ const surveyData: Survey = [
     content: '段落標題',
     comment: '',
     type: 'quote',
+    isQnoVisible: true,
     visible: true,
     config: {
       quote: '段落說明'
@@ -17,6 +18,7 @@ const surveyData: Survey = [
     content: '題目1',
     comment: '備註',
     type: 'choice',
+    isQnoVisible: true,
     visible: true,
     validate: {
       required: true
@@ -53,6 +55,7 @@ const surveyData: Survey = [
     content: '分隔線/分頁',
     comment: '',
     type: 'divider',
+    isQnoVisible: true,
     visible: true
   },
   {
@@ -60,6 +63,7 @@ const surveyData: Survey = [
     content: '段落標題二',
     comment: '',
     type: 'quote',
+    isQnoVisible: true,
     visible: true,
     config: {
       quote: '段落說明二'
@@ -71,6 +75,7 @@ const surveyData: Survey = [
     content: '題目2',
     comment: '備註',
     type: 'choice',
+    isQnoVisible: true,
     visible: true,
     validate: {
       required: true
@@ -108,6 +113,7 @@ const surveyData: Survey = [
     content: '題目3',
     comment: '備註',
     type: 'multi-answer',
+    isQnoVisible: true,
     visible: true,
     validate: {
       required: true
@@ -144,6 +150,7 @@ const surveyData: Survey = [
     content: '題目4',
     comment: '備註',
     type: 'text-input',
+    isQnoVisible: true,
     visible: true,
     validate: {
       required: true

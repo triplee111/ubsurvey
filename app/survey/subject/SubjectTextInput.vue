@@ -1,7 +1,11 @@
 <template lang="pug">
 SubjectLayout(v-if="isShow")
   template(#question)
-    p {{ context.content }}
+    SubjectQuestion(
+      :qno="qno"
+      :content="qContent"
+      :isQnoVisible="isQnoVisible"
+    )
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
@@ -21,6 +25,7 @@ import { Subject } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
   name: 'SubjectTextInput',
@@ -45,6 +50,9 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
+      qno: props.context?.qno,
+      qContent: props.context?.content,
+      isQnoVisible: props.context?.isQnoVisible,
       config: props.context?.config,
       // reactive and methods
       isShow: h?.visibility,
@@ -55,7 +63,8 @@ export default defineComponent({
     }
   },
   components: {
-    SubjectLayout
+    SubjectLayout,
+    SubjectQuestion
   }
 })
 </script>
@@ -63,7 +72,11 @@ export default defineComponent({
 <style lang="stylus">
 input
   &[type="text"]
-  &.subject-input-text-field
-    border-bottom 1px solid #424343
     width 100%
+    padding 0.4rem
+    line-height 1.5
+    border-bottom 1px solid #1a6a58
+    font-weight normal
+    &:focus
+      border-color #F76C3E
 </style>

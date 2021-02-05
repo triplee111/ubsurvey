@@ -1,7 +1,11 @@
 <template lang="pug">
 SubjectLayout(v-if="isShow")
   template(#question)
-    p {{ context.content }}
+    SubjectQuestion(
+      :qno="qno"
+      :content="qContent"
+      :isQnoVisible="isQnoVisible"
+    )
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
@@ -22,8 +26,8 @@ import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
-
 import CheckOpts from './element/SubjectCheckOpts.vue'
+import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
   name: 'SubjectMultiAns',
@@ -48,6 +52,9 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
+      qno: props.context?.qno,
+      qContent: props.context?.content,
+      isQnoVisible: props.context?.isQnoVisible,
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
@@ -59,7 +66,8 @@ export default defineComponent({
   },
   components: {
     SubjectLayout,
-    CheckOpts
+    CheckOpts,
+    SubjectQuestion
   }
 })
 </script>
