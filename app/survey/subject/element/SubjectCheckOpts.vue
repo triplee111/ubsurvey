@@ -9,7 +9,7 @@
       :id="`checkbox-${key + 1}`"
       :value="opt.id"
       type="checkbox"
-      @change="onChange")
+      @change="onChange(key)")
     label(:for="`checkbox-${key + 1}`")
       p
         span.checkmark
@@ -17,6 +17,7 @@
       .other(v-if="(key === opts.length - 1) && config.others")
         input(
           v-model="otherText"
+          ref="otherRef"
           type="text"
           @input="onChange")
 
@@ -46,6 +47,7 @@ export default defineComponent({
   setup(_props, { emit }) {
     const selected = ref<number[]>([])
     const otherText = ref<string>('')
+    const otherRef = ref<HTMLElement>()
     const { qid, config, opts } = toRefs(_props)
 
     const optLength = opts.value.length
@@ -63,7 +65,10 @@ export default defineComponent({
       }
     }
 
-    const onChange = (): void => {
+    const onChange = (key: number): void => {
+      if (key === optLength - 1) {
+        otherRef.value?.focus()
+      }
       const payload: SubjectAnswer = {
         select: selected.value
       }
@@ -77,6 +82,7 @@ export default defineComponent({
     return {
       selected,
       otherText,
+      otherRef,
       rowCount: rowCounter.rowCount,
       onChange
     }

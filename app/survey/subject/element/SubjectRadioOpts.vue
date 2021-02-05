@@ -10,7 +10,7 @@
       :id="`radio-${key + 1}`"
       :value="opt.id"
       type="radio"
-      @change="onChange")
+      @change="onChange(key)")
     label(:for="`radio-${key + 1}`")
       p
         span.radiomark
@@ -66,7 +66,10 @@ export default defineComponent({
       }
     }
 
-    const onChange = (): void => {
+    const onChange = (key: number): void => {
+      if (key === optLength - 1) {
+        otherRef.value?.focus()
+      }
       const payload: SubjectAnswer = {
         select: [selected.value]
       }
