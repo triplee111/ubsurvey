@@ -2,6 +2,7 @@
 SubjectLayout(v-if="isShow")
   template(#question)
     SubjectQuestion(
+      :id="`question-${qid}`"
       :qno="qno"
       :content="qContent"
       :isQnoVisible="isQnoVisible"
