@@ -2,7 +2,13 @@
 AppHeader
 
 #actMain
-  SurveyMain
+  Suspense
+    template(#default)
+      SurveyMain
+    template(#fallback)
+      BounceLoading
+        template(#msg)
+          p(style="color: #fff") Loading...
 
 AppFooter
 

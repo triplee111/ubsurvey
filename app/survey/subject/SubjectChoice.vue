@@ -1,7 +1,12 @@
 <template lang="pug">
 SubjectLayout(v-if="isShow")
   template(#question)
-    p {{ context.content }}
+    SubjectQuestion(
+      :id="`question-${qid}`"
+      :qno="qno"
+      :content="qContent"
+      :isQnoVisible="isQnoVisible"
+    )
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
@@ -9,22 +14,23 @@ SubjectLayout(v-if="isShow")
   template(#answer)
     component(
       :is="getOptsUiComp()"
+      :qid="qid"
       :opts="opts"
       :config="config"
-      @select="answer")
+      @updateSelect="answer")
 
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
 
-import { Subject } from '@/types'
+import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
-
 import RadioboxOpts from './element/SubjectRadioOpts.vue'
 import MenuOpts from './element/SubjectMenuOpts.vue'
+import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
   name: 'SubjectChoice',
@@ -43,9 +49,9 @@ export default defineComponent({
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: number) => {
+    const answer = (payload: SubjectAnswer) => {
       h.anchor()
-      h.reply({ select: [value] })
+      h.reply(payload)
     }
 
     const getOptsUiComp = () => {
@@ -56,6 +62,9 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
+      qno: props.context?.qno,
+      qContent: props.context?.content,
+      isQnoVisible: props.context?.isQnoVisible,
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
@@ -70,7 +79,8 @@ export default defineComponent({
   components: {
     SubjectLayout,
     RadioboxOpts,
-    MenuOpts
+    MenuOpts,
+    SubjectQuestion
   }
 })
 </script>

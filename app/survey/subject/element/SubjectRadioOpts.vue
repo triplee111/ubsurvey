@@ -1,5 +1,7 @@
 <template lang="pug">
-.optionBlock(v-bind="$attrs")
+.optionBlock(
+  v-bind="$attrs"
+  :style="`--rowCount: ${rowCount}`")
   .options(
     v-for="(opt, key) in opts"
     :key="`opt-${key + 1}`")
@@ -7,23 +9,36 @@
       v-model="selected"
       :id="`radio-${key + 1}`"
       :value="opt.id"
-      type="radio")
-    label(:for="opt.item") {{ opt.item }}
-
-  //- TODO: OTHERS
-  //- .options(v-if="config.others")
-  //-   input#others-input(type="text")
+      type="radio"
+      @change="onChange(key)")
+    label(:for="`radio-${key + 1}`")
+      p
+        span.radiomark
+        span.optionText {{ opt.item }}
+      .other(v-if="(key === opts.length - 1) && config.others")
+        input(
+          v-model="otherText"
+          ref="otherRef"
+          type="text"
+          @input="onChange")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, watch } from 'vue'
+import { defineComponent, PropType, ref, toRefs } from 'vue'
+import useRowCounter from '../../utils/row-count-helper'
+import { useStore } from 'vuex'
 
-import { Option, SubjectConfig } from '@/types'
+import { Option, SubjectConfig, Obj, SubjectAnswer } from '@/types'
 
 export default defineComponent({
   name: 'SubjectRadioOpts',
+  emits: ['updateSelect'], // defined custom event
   props: {
+    qid: {
+      type: Number,
+      default: 0
+    },
     opts: {
       type: Object as PropType<Option[]>,
       default: []
@@ -31,12 +46,46 @@ export default defineComponent({
     config: Object as PropType<SubjectConfig>
   },
   setup(_props, { emit }) {
-    const selected = ref(0)
+    const selected = ref<number>(0)
+    const otherText = ref('')
+    const otherRef = ref<HTMLElement>()
+    const { qid, config, opts } = toRefs(_props)
 
-    watch(selected, value => emit('select', value))
+    const optLength = opts.value.length
+    const column = config?.value?.optsColumn as Obj
+    const rowCounter = useRowCounter(optLength, column)
+
+    const store = useStore()
+    const ans = store.state.survey.surveyAns[qid.value]
+    if (ans) {
+      if (ans.select) {
+        selected.value = ans.select[0]
+      }
+      if (ans.inputs) {
+        otherText.value = ans.inputs
+      }
+    }
+
+    const onChange = (key: number): void => {
+      if (key === optLength - 1) {
+        otherRef.value?.focus()
+      }
+      const payload: SubjectAnswer = {
+        select: [selected.value]
+      }
+      const hasOther = selected.value === opts.value[optLength - 1].id
+      if (hasOther && config?.value?.others) {
+        payload.inputs = otherText.value
+      }
+      emit('updateSelect', payload)
+    }
 
     return {
-      selected
+      selected,
+      otherText,
+      otherRef,
+      rowCount: rowCounter.rowCount,
+      onChange
     }
   }
 })
@@ -45,18 +94,94 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .optionBlock
   display flex
-  align-items center
-  justify-content flex-start
+  align-items flex-start
+  justify-content space-between
   flex-wrap wrap
   width 100%
 
   .options
-    padding-right: 20px
+    width calc(100% / var(--rowCount) - 5px * (var(--rowCount) - 1))
+    display flex
+    align-items center
+    margin-bottom: 10px
 
     > input
-      margin-right: 5px
+      &[type="radio"]
+        width 0
+        height 0
+        opacity 0
+        &:checked
+          &+ label
+            color #fff
+            background-color #1a6a58
+            .radiomark
+              border 1px solid transparent
+              background-color #fff
+              &::after
+                opacity 1
+            .other
+              display block
 
-      &[type="text"]
-        border-bottom: 1px solid #424343
-        margin-left: 5px
+    > label
+      width 100%
+      display flex
+      flex-direction column
+      padding 0 0.5rem
+      border 1px solid #1a6a58
+      border-radius 4px
+      transition background 0.2s ease-in, color 0.2s ease-in
+      cursor pointer
+
+      p
+        width 100%
+        display flex
+        align-items center
+
+      .radiomark
+        position relative
+        display flex
+        align-items center
+        justify-content center
+        width 16px
+        height 16px
+        border 1px solid #999
+        border-radius 50%
+        margin-right 5px
+
+        &::after
+          content ''
+          display block
+          width 12px
+          height 12px
+          border-radius 50%
+          background-color #1a6a58
+          opacity 0
+          transition opacity  0.2s ease-in
+
+      .optionText
+        max-width calc(100% - 30px)
+
+      .other
+        display none
+        width 100%
+        margin 0.5rem 0
+        padding 0.5rem
+        background-color #fff
+        border-radius 4px
+
+        input[type="text"]
+          width 100%
+          padding 0.4rem
+          line-height 1.5
+          border-bottom 1px solid #1a6a58
+          font-weight normal
+          &:focus
+            border-color #F76C3E
+
+    &:hover
+      .radiomark
+        border-color #1a6a58
+
+        &::after
+          opacity 0.6
 </style>

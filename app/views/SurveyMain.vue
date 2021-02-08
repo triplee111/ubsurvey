@@ -29,12 +29,11 @@ import surveyService from '@/mock/index'
 
 export default defineComponent({
   name: 'SurveyMain',
-  setup() {
+  async setup() {
     const surveyData: Ref<Survey> = ref([])
 
-    surveyService.then(data => {
-      surveyData.value = data
-    })
+    const data = await surveyService
+    surveyData.value = data
 
     return {
       surveyData
@@ -78,7 +77,7 @@ export default defineComponent({
 
   .subTitle
     font-size: 20px
-    margin-bottom: 40px
+    margin-bottom: 20px
 
   .scrollContainer
     position: relative
