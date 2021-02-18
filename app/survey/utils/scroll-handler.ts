@@ -4,8 +4,8 @@ const useScrollHandler = () => {
   let diffTop = 0
 
   const smoothScroll = () => {
-    ps.scrollTop += (diffTop / 30)
-    if(ps.scrollTop <= diffTop) {
+    ps.scrollTop += diffTop / 30
+    if (ps.scrollTop <= diffTop) {
       window.requestAnimationFrame(smoothScroll)
     }
   }
@@ -14,7 +14,7 @@ const useScrollHandler = () => {
     const subject = document.querySelector(`#question-${qid}`) as HTMLElement
     const subjectRect = subject.getBoundingClientRect()
     diffTop = subjectRect.top - psRect.top
-    if(diffTop >= 0) {
+    if (diffTop >= 0) {
       window.requestAnimationFrame(smoothScroll)
     }
   }

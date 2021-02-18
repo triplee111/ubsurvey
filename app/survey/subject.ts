@@ -26,7 +26,7 @@ export default (subject: Subject) => {
   }
 
   const anchor = () => {
-    if(Number(qid) == subjectFlag.value) return
+    if (Number(qid) === subjectFlag.value) return
     store.dispatch('survey/anchor', subject.id)
     scrollHandler.scrollTo(qid)
   }
