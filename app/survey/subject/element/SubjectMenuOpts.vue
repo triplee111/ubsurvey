@@ -3,16 +3,16 @@
   .webSelect(
     v-if="device === 'desktop'"
     ref="menuWrapper"
-    @click="toggleSelect")
+    @click="toggleMenu")
     .selectText {{ currentText }}
     img(
-      :class="isSelectOpen ? 'rotate': ''"
+      :class="isMenuOpen ? 'rotate': ''"
       src="@/assets/img/arrow-up.svg"
       ult="arrow-up")
 
     Teleport(to="body")
       ul.selectDropdown(
-        v-show="isSelectOpen"
+        v-show="isMenuOpen"
         v-perfect-scroll
         :style="dropdownStyle")
         li(
@@ -23,7 +23,7 @@
 
   select.menu(
     v-else
-    @change="handleSelect")
+    v-model="selected")
     option(value="0" disabled selected hidden) 尚未选择
     option(
       v-for="(opt, key) in opts"
@@ -38,9 +38,10 @@ import {
   defineComponent,
   PropType,
   ref,
+  computed,
+  watch,
   onMounted,
-  onBeforeUnmount,
-  computed
+  onBeforeUnmount
 } from 'vue'
 
 import { Option, SubjectConfig, DropdwonStyle, SubjectAnswer } from '@/types'
@@ -60,8 +61,9 @@ export default defineComponent({
     config: Object as PropType<SubjectConfig>
   },
   setup(props, { emit }) {
+    const selected = ref(0)
     const menuWrapper = ref<HTMLElement>(document.createElement('div'))
-    const isSelectOpen = ref(false)
+    const isMenuOpen = ref(false)
     const dropdownStyle = ref<DropdwonStyle>()
 
     const answer = computed({
@@ -78,50 +80,54 @@ export default defineComponent({
       return opt ? opt.item : '尚未选择'
     })
 
+    watch(selected, (value: number) => {
+      answer.value.select = [value]
+    })
+
     onMounted(() => {
       window.addEventListener('wheel', setDropdownStyle)
 
-      // if (answer.value.select) {
-      //   selected.value = answer.value.select[0]
-      // }
+      if (answer.value.select) {
+        selected.value = answer.value.select[0]
+      }
     })
+
     onBeforeUnmount(() => {
       window.removeEventListener('wheel', setDropdownStyle)
     })
 
-    const handleSelect = (id: number) => {
-      answer.value.select = [id]
-      isSelectOpen.value = false
-    }
+    const toggleMenu = () => {
+      isMenuOpen.value = !isMenuOpen.value
 
-    const toggleSelect = (): void => {
-      isSelectOpen.value = !isSelectOpen.value
-
-      if (isSelectOpen.value) {
+      if (isMenuOpen.value) {
         setDropdownStyle()
       }
     }
 
-    const setDropdownStyle = (): void => {
+    const setDropdownStyle = () => {
       const rect = menuWrapper.value?.getBoundingClientRect()
-      if (rect) {
-        const { top, left, width, height } = rect
-        dropdownStyle.value = {
-          width: `${width}px`,
-          top: `${top + height}px`,
-          left: `${left}px`
-        }
+
+      const { top, left, width, height } = rect
+      dropdownStyle.value = {
+        width: `${width}px`,
+        top: `${top + height}px`,
+        left: `${left}px`
       }
     }
 
+    const handleSelect = (id: number) => {
+      answer.value.select = [id]
+      isMenuOpen.value = false
+    }
+
     return {
-      answer,
+      selected,
       device,
       menuWrapper,
       currentText,
-      isSelectOpen,
+      isMenuOpen,
+      toggleMenu,
       dropdownStyle,
-      toggleSelect,
       handleSelect
     }
   }
