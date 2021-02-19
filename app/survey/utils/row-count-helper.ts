@@ -1,8 +1,13 @@
 import { computed } from 'vue'
 import { device } from './window-size-observer'
-import { Obj } from '@/types'
 
-const useRowCounter = (optLength: number, column: Obj) => {
+const useRowCounter = (
+  optLength: number,
+  column: {
+    desktop: number
+    mobile: number
+  }
+) => {
   const rowCount = computed(() => {
     /**
      *  預設 row count 為 2，

@@ -1,15 +1,13 @@
 import debounce from 'lodash/debounce'
-import { ref } from 'vue'
+import { ref, Ref } from 'vue'
 
 import { IResizeCallBack } from '@/types'
 
-const device = ref('')
+const device: Ref<'desktop' | 'mobile'> = ref('desktop')
 
-export {
-  device
-}
+export { device }
 
-const getDevice = function(boundary: number) {
+const getDevice = (boundary: number) => {
   return window.innerWidth >= boundary ? 'desktop' : 'mobile'
 }
 

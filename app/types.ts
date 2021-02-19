@@ -2,10 +2,6 @@
 
 export type ExternalLinks = { [porp: string]: string }
 
-export type Obj = {
-  [key: string]: number
-}
-
 export type DropdwonStyle = {
   width: string
   top: string
