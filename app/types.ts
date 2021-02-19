@@ -71,7 +71,6 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
-  isQnoVisible: boolean
   validate?: ValidateRules
   opts?: Option[]
   config?: SubjectConfig
