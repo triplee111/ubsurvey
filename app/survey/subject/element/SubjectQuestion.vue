@@ -36,4 +36,6 @@ export default defineComponent({
   align-items center
   .qNo
     position absolute
+    font-size 0.75rem
+    top 2px
 </style>

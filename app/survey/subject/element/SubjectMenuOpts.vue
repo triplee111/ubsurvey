@@ -24,7 +24,11 @@
   select.menu(
     v-else
     v-model="selected")
-    option(value="0" disabled selected hidden) 尚未选择
+    option(
+      :value="0"
+      disabled
+      selected
+      hidden) 尚未选择
     option(
       v-for="(opt, key) in opts"
       :key="`opt-${key + 1}`"
@@ -81,13 +85,15 @@ export default defineComponent({
     })
 
     watch(selected, (value: number) => {
-      answer.value.select = [value]
+      if (value) {
+        answer.value.select = [value]
+      }
     })
 
     onMounted(() => {
       window.addEventListener('wheel', setDropdownStyle)
 
-      if (answer.value.select) {
+      if (answer.value.select && answer.value.select.length) {
         selected.value = answer.value.select[0]
       }
     })
