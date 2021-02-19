@@ -5,8 +5,6 @@ import { IResizeCallBack } from '@/types'
 
 const device: Ref<'desktop' | 'mobile'> = ref('desktop')
 
-export { device }
-
 const getDevice = (boundary: number) => {
   return window.innerWidth >= boundary ? 'desktop' : 'mobile'
 }
@@ -26,3 +24,5 @@ export default (callback: IResizeCallBack, boundary: number) => {
 
   window.addEventListener('resize', debounce(resizeLinstener, 400))
 }
+
+export { device }
