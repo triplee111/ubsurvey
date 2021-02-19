@@ -1,6 +1,5 @@
 import { useStore } from 'vuex'
 import { computed, watch, ref, reactive, Ref } from 'vue'
-// import useScrollHandler from './utils/scroll-handler'
 
 import { Subject, SubjectAnswer, ErrorRecord } from '@/types'
 import { createValidator } from '@/survey/validator'
@@ -8,14 +7,10 @@ import { createValidator } from '@/survey/validator'
 export default (subject: Subject) => {
   const qid = subject.id.toString()
   const store = useStore()
-  const subjectFlag = computed(() => store.state.survey.subjectFlag)
-
   const errors: Ref<ErrorRecord[]> = ref([])
 
   const visibility = computed(() => store.state.survey.visibility[qid])
   const answer = computed(() => store.state.survey.surveyAns[qid])
-
-  // const scrollHandler = useScrollHandler()
 
   const init = () => {
     if (answer.value) return reactive({ ...answer.value })
@@ -34,9 +29,7 @@ export default (subject: Subject) => {
   }
 
   const anchor = () => {
-    if (Number(qid) === subjectFlag.value) return
     store.dispatch('survey/anchor', subject.id)
-    // scrollHandler.scrollTo(qid)
   }
 
   if (subject.validate) {

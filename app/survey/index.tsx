@@ -8,6 +8,7 @@ import SubjectPagination from './subject/element/SubjectPagination.vue'
 import SubjectSubmit from './subject/element/SubjectSubmit.vue'
 
 import _windowSizeObserver from './utils/window-size-observer'
+import _scrollHandler from './utils/scroll-handler'
 import { useComponentsMap } from './register'
 
 const paginations: number[][] = [[]]
@@ -43,7 +44,6 @@ export default defineComponent({
      * 此處的目的是希望依據問卷資料生成對應種類的題目元件，所以不會直接解析所有種類的元件或是預載範本資料
      *
      * 但因為 resolve component 只能在 setup 作用域裡使用(無法異步執行)，需要 props:survey 確定有資料再行驅動
-     * 目前是透過在父元件使用 v-if 控制啟動流程
      */
     const renderer = props.survey.reduce((acc, subject, index) => {
       const compName = compMap.get(subject.type)
@@ -139,6 +139,9 @@ export default defineComponent({
       component: SubjectSubmit // TODO: need wrapper page
     })
 
+    /**
+     * 介面互動設定，包含 window resize & anchor scroll
+     */
     _windowSizeObserver((device: string) => {
       if (device === 'mobile') {
         let pno = 1
@@ -164,6 +167,12 @@ export default defineComponent({
         router.push({ name: 'survey' })
       }
     }, props.responseBoundary)
+
+    store.subscribeAction((action) => {
+      if (action.type === 'survey/anchor') {
+        _scrollHandler().scrollTo(action.payload)
+      }
+    })
 
     return () => (<RouterView />)
   },

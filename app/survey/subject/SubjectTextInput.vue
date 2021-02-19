@@ -44,7 +44,7 @@ export default defineComponent({
     )
 
     watch(answer, (value: SubjectAnswer) => {
-      // h.anchor()
+      h.anchor()
       h.reply(value)
     })
 
@@ -53,7 +53,6 @@ export default defineComponent({
       qid: props.context?.id,
       qno: props.context?.qno,
       qContent: props.context?.content,
-      isQnoVisible: props.context?.isQnoVisible,
       config: props.context?.config,
       // reactive and methods
       isShow: h?.visibility,

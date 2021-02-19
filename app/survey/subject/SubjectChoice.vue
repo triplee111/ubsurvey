@@ -25,9 +25,9 @@ import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectQuestion from './element/SubjectQuestion.vue'
 import RadioboxOpts from './element/SubjectRadioOpts.vue'
 import MenuOpts from './element/SubjectMenuOpts.vue'
-import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
   name: 'SubjectChoice',
@@ -49,7 +49,7 @@ export default defineComponent({
     )
 
     watch(answer, (value: SubjectAnswer) => {
-      // h.anchor()
+      h.anchor()
       h.reply(value)
     })
 
@@ -63,7 +63,6 @@ export default defineComponent({
       qid: props.context?.id,
       qno: props.context?.qno,
       qContent: props.context?.content,
-      isQnoVisible: props.context?.isQnoVisible,
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
