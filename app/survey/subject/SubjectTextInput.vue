@@ -4,25 +4,23 @@ SubjectLayout(v-if="isShow")
     SubjectQuestion(
       :id="`question-${qid}`"
       :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :content="qContent")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     input.subject-input-text-field(
-      v-model.lazy="textInput"
-      @focusin="anchor"
-      type="text")
+      v-model.lazy="answer.inputs"
+      type="text"
+      @focusin="anchor")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, computed, watch } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
-import { Subject } from '@/types'
+import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
 import SubjectLayout from './element/SubjectLayout.vue'
@@ -37,16 +35,18 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const textInput = ref('')
-
     const h = useSubjectHandler(props.context)
+
+    const answer = h.init()
 
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: string) => h.reply({ inputs: value })
-    watch(textInput, value => answer(value))
+    watch(answer, (value: SubjectAnswer) => {
+      // h.anchor()
+      h.reply(value)
+    })
 
     return {
       // static
@@ -60,7 +60,7 @@ export default defineComponent({
       visible: h?.visible,
       anchor: h?.anchor,
       helpeText: message,
-      textInput
+      answer
     }
   },
   components: {

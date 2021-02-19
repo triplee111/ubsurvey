@@ -4,24 +4,21 @@ SubjectLayout(v-if="isShow")
     SubjectQuestion(
       :id="`question-${qid}`"
       :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :content="qContent")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     CheckOpts(
-      :qid="qid"
+      v-model:ans="answer"
       :opts="opts"
-      :config="config"
-      @updateSelect="answer")
+      :config="config")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
 
@@ -41,14 +38,16 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
+    const answer = h.init()
+
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (payload: SubjectAnswer) => {
-      h.anchor()
-      h.reply(payload)
-    }
+    watch(answer, (value: SubjectAnswer) => {
+      // h.anchor()
+      h.reply(value)
+    })
 
     return {
       // static

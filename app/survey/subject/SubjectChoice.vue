@@ -4,25 +4,22 @@ SubjectLayout(v-if="isShow")
     SubjectQuestion(
       :id="`question-${qid}`"
       :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :content="qContent")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     component(
+      v-model:ans="answer"
       :is="getOptsUiComp()"
-      :qid="qid"
       :opts="opts"
-      :config="config"
-      @updateSelect="answer")
+      :config="config")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
 
@@ -43,16 +40,18 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
+    const answer = h.init()
+
     // Container & Validator 不負責產生提示顯示文案
     // 由個別元件控制或額外設定文案機制
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (payload: SubjectAnswer) => {
-      h.anchor()
-      h.reply(payload)
-    }
+    watch(answer, (value: SubjectAnswer) => {
+      // h.anchor()
+      h.reply(value)
+    })
 
     const getOptsUiComp = () => {
       const ui = props.context.config?.optsUi
@@ -72,8 +71,8 @@ export default defineComponent({
       visible: h?.visible,
       anchor: h?.anchor,
       helpeText: message,
-      answer,
-      getOptsUiComp
+      getOptsUiComp,
+      answer
     }
   },
   components: {
