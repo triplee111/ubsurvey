@@ -21,7 +21,7 @@ const mutations: MutationTree<typeof state> = {
     state.visibility[payload.qid] = payload.state
   },
   [SET_ANSWER](state, { qid, ans }: { qid: string; ans: SubjectAnswer }) {
-    state.surveyAns[qid] = ans
+    state.surveyAns[qid] = { ...ans }
   },
   [SET_FLAG](state, qid) {
     state.subjectFlag = qid
