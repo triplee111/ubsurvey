@@ -1,6 +1,6 @@
 import { useStore } from 'vuex'
-import { computed, watch, ref, Ref } from 'vue'
-import useScrollHandler from './utils/scroll-handler'
+import { computed, watch, ref, reactive, Ref } from 'vue'
+// import useScrollHandler from './utils/scroll-handler'
 
 import { Subject, SubjectAnswer, ErrorRecord } from '@/types'
 import { createValidator } from '@/survey/validator'
@@ -15,7 +15,15 @@ export default (subject: Subject) => {
   const visibility = computed(() => store.state.survey.visibility[qid])
   const answer = computed(() => store.state.survey.surveyAns[qid])
 
-  const scrollHandler = useScrollHandler()
+  // const scrollHandler = useScrollHandler()
+
+  const init = () => {
+    if (answer.value) return reactive({ ...answer.value })
+
+    return subject.opts && subject.opts.length
+      ? reactive({ select: [] })
+      : reactive({})
+  }
 
   const visible = (payload: { qid: string; state: boolean }) => {
     store.dispatch('survey/visible', payload)
@@ -28,16 +36,16 @@ export default (subject: Subject) => {
   const anchor = () => {
     if (Number(qid) === subjectFlag.value) return
     store.dispatch('survey/anchor', subject.id)
-    scrollHandler.scrollTo(qid)
+    // scrollHandler.scrollTo(qid)
   }
 
   if (subject.validate) {
     const v = createValidator(subject.validate)
 
-    watch(answer, (ans: SubjectAnswer) => {
+    watch(answer, (value: SubjectAnswer) => {
       // 在沒有設定 break = true 的情況，每一次驗證會驗證該題設定的全部規則
       // 若目標規則有錯誤會產生一個錯誤物件，最後回傳一組錯誤物件陣列
-      errors.value = v.verify(ans)
+      errors.value = v.verify(value)
     })
 
     store.subscribeAction((action, state) => {
@@ -58,6 +66,7 @@ export default (subject: Subject) => {
   return {
     visibility,
     errors,
+    init,
     reply,
     visible,
     anchor
