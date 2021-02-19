@@ -4,14 +4,15 @@
   :style="`--rowCount: ${rowCount}`")
   .options(
     v-for="(opt, key) in opts"
-    :key="`opt-${key + 1}`")
+    :key="`opt-${opt.id}`")
     input(
       v-model="selected"
-      :id="`radio-${key + 1}`"
+      :id="`radio-${opt.id}`"
       :value="opt.id"
-      type="radio")
+      type="radio"
+      @click="test")
 
-    label(:for="`radio-${key + 1}`")
+    label(:for="`radio-${opt.id}`")
       p
         span.radiomark
         span.optionText {{ opt.item }}
@@ -49,6 +50,7 @@ export default defineComponent({
       desktop: 2,
       mobile: 1
     }
+    const rowCounter = useRowCounter(props.opts.length, columnsConfig)
 
     const answer = computed({
       get: () => props.ans,
@@ -58,13 +60,15 @@ export default defineComponent({
     })
 
     watch(selected, (value: number) => {
-      answer.value.select = [value]
+      if (value) {
+        answer.value.select = [value]
 
-      if (
-        props.config?.others &&
-        value === props.opts[props.opts.length - 1].id
-      ) {
-        othersInputField.value?.focus()
+        if (
+          props.config?.others &&
+          value === props.opts[props.opts.length - 1].id
+        ) {
+          othersInputField.value?.focus()
+        }
       }
     })
 
@@ -73,8 +77,6 @@ export default defineComponent({
         selected.value = answer.value.select[0]
       }
     })
-
-    const rowCounter = useRowCounter(props.opts.length, columnsConfig)
 
     return {
       selected,

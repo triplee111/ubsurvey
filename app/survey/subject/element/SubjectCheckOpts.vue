@@ -4,15 +4,15 @@
   :style="`--rowCount: ${rowCount}`")
   .options(
     v-for="(opt, key) in opts"
-    :key="`opt-${key + 1}`")
+    :key="`opt-${opt.id}`")
     input(
       v-model="answer.select"
-      :id="`checkbox-${key + 1}`"
+      :id="`checkbox-${opt.id}`"
       :value="opt.id"
       type="checkbox"
       @change="onChange(key)")
 
-    label(:for="`checkbox-${key + 1}`")
+    label(:for="`checkbox-${opt.id}`")
       p
         span.checkmark
         span.optionText {{ opt.item }}
