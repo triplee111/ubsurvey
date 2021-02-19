@@ -22,7 +22,7 @@ export default (callback: IResizeCallBack, boundary: number) => {
     }
   }
 
-  window.addEventListener('resize', debounce(resizeLinstener, 400))
+  window.addEventListener('resize', debounce(resizeLinstener, 100))
 }
 
 export { device }
