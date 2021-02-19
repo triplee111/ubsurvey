@@ -3,7 +3,7 @@
   .title 填问卷 豪礼三选一
   .subTitle 礼品、彩金、高额存送任您挑
 
-  .scrollContainer(v-perfect-scroll:110)
+  .scrollContainer(v-perfect-scroll:500)
     .titleBlock
       .mbTitle 填问卷 豪礼三选一
       .mbSubTitle 礼品、彩金、高额存送任您挑
