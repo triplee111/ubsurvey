@@ -8,11 +8,7 @@
       .mbTitle 填问卷 豪礼三选一
       .mbSubTitle 礼品、彩金、高额存送任您挑
 
-    SurveyContainer(
-      v-if="surveyData.length"
-      :survey="surveyData")
-
-    //- TODO: suspend
+    SurveyContainer(:survey="surveyData")
 
 ModalContainer
 
