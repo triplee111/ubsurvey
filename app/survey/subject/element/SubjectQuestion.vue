@@ -1,20 +1,24 @@
 <template lang="pug">
 .question
   p.qNo(
+    v-if="que.no"
     ref="qNoRef"
-    :style="`left: -${width + 5}px`") {{ `${qno}.` }}
+    :style="`left: -${width + 5}px`") {{ `${que.no}.` }}
 
-  p.qContent {{ content }}
+  p.qContent {{ que.content }}
 
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref, computed, PropType } from 'vue'
 
 export default defineComponent({
   name: 'SubjectQuestion',
   props: {
-    qno: Number,
+    que: Object as PropType<{
+      no?: number
+      content: string
+    }>,
     content: String
   },
   setup() {

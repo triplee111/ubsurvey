@@ -3,8 +3,7 @@ SubjectLayout(v-if="isShow")
   template(#question)
     SubjectQuestion(
       :id="`question-${qid}`"
-      :qno="qno"
-      :content="qContent")
+      :que="question")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
@@ -51,8 +50,10 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
-      qno: props.context?.qno,
-      qContent: props.context?.content,
+      question: {
+        no: props.context?.qno,
+        content: props.context.content
+      },
       config: props.context?.config,
       // reactive and methods
       isShow: h?.visibility,
