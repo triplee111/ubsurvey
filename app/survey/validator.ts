@@ -1,4 +1,4 @@
-import { ValidateRules, IVerify, ValidatorOptions } from './../types'
+import { ValidateRules, IVerify, ValidatorOptions } from '@/types'
 import * as vMethods from './validation'
 
 const Validator: { verify: IVerify } = {
