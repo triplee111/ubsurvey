@@ -3,7 +3,7 @@
   .title 填问卷 豪礼三选一
   .subTitle 礼品、彩金、高额存送任您挑
 
-  .scrollContainer(v-perfect-scroll:300)
+  #survey-container.scrollContainer
     .titleBlock
       .mbTitle 填问卷 豪礼三选一
       .mbSubTitle 礼品、彩金、高额存送任您挑
@@ -15,11 +15,13 @@ ModalContainer
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, ref, watch, onMounted, Ref } from 'vue'
 import ModalContainer from '@act/slime-modal'
+import PerfectScrollbar from '@act/perfect-scrollbar'
 
 import { Survey } from '@/types'
 
+import { device } from '@/survey/utils/window-size-observer'
 import SurveyContainer from '@/survey/index'
 import surveyService from '@/mock/index'
 
@@ -27,6 +29,14 @@ export default defineComponent({
   name: 'SurveyMain',
   async setup() {
     const surveyData: Ref<Survey> = ref([])
+
+    onMounted(() => {
+      setTimeout(() => {
+        const ps = new PerfectScrollbar('#survey-container')
+
+        watch(device, () => setTimeout(() => ps.update(), 400))
+      }, 300)
+    })
 
     const data = await surveyService
     surveyData.value = data
