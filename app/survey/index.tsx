@@ -168,7 +168,7 @@ export default defineComponent({
       }
     }, props.responseBoundary)
 
-    store.subscribeAction((action) => {
+    store.subscribeAction(action => {
       if (action.type === 'survey/anchor') {
         _scrollHandler().scrollTo(action.payload)
       }

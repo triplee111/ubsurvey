@@ -1,6 +1,6 @@
 export default () => {
   let lengthBetweenDomsTop = 0
-  let distance = 0
+  let offset = 0
 
   const ps = document.querySelector('.scrollContainer') as HTMLElement
   const psRect = ps.getBoundingClientRect()
@@ -12,25 +12,30 @@ export default () => {
       const subjectRect = target.getBoundingClientRect()
 
       lengthBetweenDomsTop = Number(
-        Math.round(((subjectRect.top - psRect.top) / 2) * 100) + 'e-2'
+        Math.round(
+          (Math.round(subjectRect.top) - Math.round(psRect.top) - 10) * 100
+        ) + 'e-2'
       )
 
-      distance = Number(Math.round((lengthBetweenDomsTop / 30) * 100) + 'e-2')
+      offset = Number(Math.round((lengthBetweenDomsTop / 30) * 100) + 'e-2')
 
       if (lengthBetweenDomsTop >= 0) {
-        smoothScroll()
+        smoothScroll(0)
       }
     }
   }
 
-  const smoothScroll = () => {
-    ps.scrollTop += distance
+  const smoothScroll = (distance: number) => {
+    ps.scrollTop += offset
+    distance += offset
 
     if (
-      ps.scrollTop <= lengthBetweenDomsTop &&
+      distance <= lengthBetweenDomsTop &&
       ps.clientHeight + ps.scrollTop < ps.scrollHeight
     ) {
-      window.requestAnimationFrame(smoothScroll)
+      window.requestAnimationFrame(() => {
+        smoothScroll(distance)
+      })
     }
   }
 
