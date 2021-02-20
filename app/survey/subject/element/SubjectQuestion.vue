@@ -37,5 +37,5 @@ export default defineComponent({
   .qNo
     position absolute
     font-size 0.75rem
-    top 2px
+    top 2.5px
 </style>
