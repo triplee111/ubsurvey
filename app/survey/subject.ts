@@ -32,23 +32,33 @@ export default (subject: Subject) => {
     store.dispatch('survey/anchor', subject.id)
   }
 
-  if (subject.validate) {
-    const v = createValidator(subject.validate)
+  if (subject.validate && subject.visible) {
+    const v = createValidator(subject.validate) // 注入設定產生對應的驗證器
 
     watch(answer, (value: SubjectAnswer) => {
       // 在沒有設定 break = true 的情況，每一次驗證會驗證該題設定的全部規則
       // 若目標規則有錯誤會產生一個錯誤物件，最後回傳一組錯誤物件陣列
       errors.value = v.verify(value)
+
+      store.dispatch('survey/verify', {
+        qid,
+        state: !errors.value.length
+      })
     })
 
     store.subscribeAction((action, state) => {
       if (
-        action.type === 'survey/submit' &&
+        action.type === 'survey/verifyAll' &&
         !Object.prototype.hasOwnProperty.call(state.survey.validation, qid)
       ) {
         errors.value = v.verify({
           select: [],
           inputs: ''
+        })
+
+        store.dispatch('survey/verify', {
+          qid,
+          state: !errors.value.length
         })
       }
     })
