@@ -22,7 +22,7 @@ import { defineComponent, PropType, computed, watch } from 'vue'
 import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
-import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectLayout from './common/SubjectLayout.vue'
 import SubjectQuestion from './element/SubjectQuestion.vue'
 import CheckOpts from './element/SubjectCheckOpts.vue'
 

@@ -11,7 +11,7 @@ import { defineComponent, PropType } from 'vue'
 
 import { Subject } from '@/types'
 
-import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectLayout from './common/SubjectLayout.vue'
 
 export default defineComponent({
   name: 'SubjectQuote',

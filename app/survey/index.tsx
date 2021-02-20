@@ -4,8 +4,8 @@ import { RouterView, useRouter, RouteRecordRaw } from 'vue-router'
 
 import { Survey } from '@/types'
 
-import SubjectPagination from './subject/element/SubjectPagination.vue'
-import SubjectSubmit from './subject/element/SubjectSubmit.vue'
+import SubjectPagination from './subject/common/SubjectPagination.vue'
+import SubjectSubmit from './subject/common/SubjectSubmitBtn.vue'
 
 import _windowSizeObserver from './utils/window-size-observer'
 import _scrollHandler from './utils/scroll-handler'

@@ -7,16 +7,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: 'SubjectSubmit',
+  name: 'SubjectSubmitBtn',
   setup() {
     const store = useStore()
 
-    const submitSurvey = () => {
+    const ansLength = computed(
+      () => Object.keys(store.state.survey.surveyAns).length
+    )
+    const validatedLength = computed(
+      () => Object.keys(store.state.survey.validation).length
+    )
+    const validations = computed(() =>
+      Object.values(store.state.survey.validation)
+    )
+
+    const submitSurvey = async () => {
+      await store.dispatch('survey/verifyAll')
+
+      if (
+        ansLength.value !== validatedLength.value ||
+        validations.value.includes(false)
+      ) {
+        // TODO: alert
+
+        return false
+      }
+
+      // TODO: show confirm
+
       store.dispatch('survey/submit')
+
+      // TODO: show response
     }
 
     return {
