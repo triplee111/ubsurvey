@@ -16,7 +16,7 @@
         v-perfect-scroll
         :style="dropdownStyle")
         li(
-          v-for="(opt, key) in opts"
+          v-for="opt in opts"
           :key="`opt-${opt.id}`"
           @click="handleSelect(opt.id)")
           | {{ opt.item }}
@@ -30,7 +30,7 @@
       selected
       hidden) 尚未选择
     option(
-      v-for="(opt, key) in opts"
+      v-for="opt in opts"
       :key="`opt-${opt.id}`"
       :value="opt.id")
       | {{ opt.item }}
