@@ -39,9 +39,27 @@ export default defineComponent({
 
     const answer = h.init()
 
-    const message = computed(() =>
-      h.errors.value.length ? '此栏位为必填栏位' : ''
-    )
+    const message = computed(() => {
+      if (h.errors.value.length) {
+        const error = h.errors.value.shift() // 只選擇第一個錯誤顯示提示
+
+        if (error?.rule === 'optsRange') {
+          const { min, max } = error.config
+
+          if (min === max) {
+            return `请选择 ${max} 个选项`
+          }
+
+          if (min === 0) {
+            return `最多可选择 ${max} 个选项`
+          }
+
+          return `请选择 ${min} 到 ${max} 个选项`
+        }
+
+        return '此题为必选题目'
+      }
+    })
 
     watch(answer, (value: SubjectAnswer) => {
       h.anchor()
