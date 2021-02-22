@@ -58,7 +58,6 @@ actService
         ...EXTERNAL_LINKS
       })
       .provide('copy', '')
-      .provide('token', '')
   })
   .finally(() => {
     app

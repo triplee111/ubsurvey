@@ -8,14 +8,16 @@
       .mbTitle 填问卷 豪礼三选一
       .mbSubTitle 礼品、彩金、高额存送任您挑
 
-    SurveyContainer(:survey="surveyData")
+    SurveyContainer(
+      v-if="surveyData.length"
+      :survey="surveyData")
 
 ModalContainer
 
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, Ref } from 'vue'
+import { defineComponent, ref, watch, onMounted, inject, Ref } from 'vue'
 import ModalContainer from '@act/slime-modal'
 import PerfectScrollbar from '@act/perfect-scrollbar'
 
@@ -23,12 +25,13 @@ import { Survey } from '@/types'
 
 import { device } from '@/survey/utils/window-size-observer'
 import SurveyContainer from '@/survey/index'
-import surveyService from '@/mock/index'
+import service from '@/repository/survey'
 
 export default defineComponent({
   name: 'SurveyMain',
   async setup() {
     const surveyData: Ref<Survey> = ref([])
+    const token = inject<string>('token')
 
     onMounted(() => {
       setTimeout(() => {
@@ -38,8 +41,16 @@ export default defineComponent({
       }, 300)
     })
 
-    const data = await surveyService
-    surveyData.value = data
+    if (token) {
+      try {
+        const data = await service.getSurvey(token)
+        surveyData.value = data.ques
+      } catch (err) {
+        alert(err)
+      }
+    } else {
+      alert('empty token')
+    }
 
     return {
       surveyData
