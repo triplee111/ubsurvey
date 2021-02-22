@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios'
 
 import useAgent from '@act/service-agent'
 
-const endpoint = 'ub/ubxmas2020'
+const endpoint = 'ub/ubsurvey'
 
 /**
  * 如果需要覆寫選用 agent 封裝的設定時，需要指定該 agent 參數的宣告型別

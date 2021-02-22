@@ -41,7 +41,7 @@ const app = createApp(App)
 
 actService
   .init()
-  .then(({ actTitle, links, copy }: InitResolve) => {
+  .then(({ actTitle, links, copy, token }: InitResolve & { token: string }) => {
     app
       .provide('actTitle', actTitle)
       .provide('links', {
@@ -49,6 +49,7 @@ actService
         ...links
       })
       .provide('copy', copy)
+      .provide('token', token)
   })
   .catch(() => {
     app
@@ -57,6 +58,7 @@ actService
         ...EXTERNAL_LINKS
       })
       .provide('copy', '')
+      .provide('token', '')
   })
   .finally(() => {
     app
