@@ -17,7 +17,7 @@
         :style="dropdownStyle")
         li(
           v-for="(opt, key) in opts"
-          :key="`opt-${key + 1}`"
+          :key="`opt-${opt.id}`"
           @click="handleSelect(opt.id)")
           | {{ opt.item }}
 
@@ -31,7 +31,7 @@
       hidden) 尚未选择
     option(
       v-for="(opt, key) in opts"
-      :key="`opt-${key + 1}`"
+      :key="`opt-${opt.id}`"
       :value="opt.id")
       | {{ opt.item }}
 
