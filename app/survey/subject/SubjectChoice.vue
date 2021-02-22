@@ -44,7 +44,7 @@ export default defineComponent({
     // Container & Validator 不負責產生提示顯示文案
     // 由個別元件控制或額外設定文案機制
     const message = computed(() =>
-      h.errors.value.length ? '此栏位为必填栏位' : ''
+      h.errors.value.length ? '此题为必选题目' : ''
     )
 
     watch(answer, (value: SubjectAnswer) => {
