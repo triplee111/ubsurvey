@@ -41,7 +41,9 @@ const actions: ActionTree<typeof state, State> = {
   anchor({ commit }, qid) {
     commit(SET_FLAG, qid)
   },
-  verifyAll() {},
+  verifyAll() {
+    // signal action, do nothing
+  },
   submit() {
     // TODO: service post
   }
