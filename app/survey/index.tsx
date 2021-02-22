@@ -21,6 +21,11 @@ export default defineComponent({
       type: Object as PropType<Survey>,
       default: []
     },
+    // parent route name
+    parentRouteName: {
+      type: String,
+      default: ''
+    },
     // 介面切換的寬度界線
     responseBoundary: {
       type: Number,
@@ -148,7 +153,11 @@ export default defineComponent({
 
         const flag = computed(() => store.state.survey.subjectFlag)
 
-        router.addRoute(multiPageRouterRecord)
+        if (props.parentRouteName) {
+          router.addRoute(props.parentRouteName, multiPageRouterRecord)
+        } else {
+          router.addRoute(multiPageRouterRecord)
+        }
 
         if (flag.value === -1) {
           router.push({ name: 'page1', params: { pno } })
@@ -163,7 +172,12 @@ export default defineComponent({
           pno++
         }
       } else {
-        router.addRoute(singlePageRouterRecord)
+        if (props.parentRouteName) {
+          router.addRoute(props.parentRouteName, singlePageRouterRecord)
+        } else {
+          router.addRoute(singlePageRouterRecord)
+        }
+
         router.push({ name: 'survey' })
       }
     }, props.responseBoundary)
