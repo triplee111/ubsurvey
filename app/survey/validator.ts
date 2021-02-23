@@ -3,8 +3,13 @@ import * as vMethods from './validation'
 
 const Validator: { verify: IVerify } = {
   verify: (ans, errors = []) => {
-    if (!ans.inputs && !ans.select) {
-      throw new Error('Failed Answer')
+    const keys = Object.keys(ans)
+
+    if (
+      keys.length === 0 ||
+      !(keys.includes('select') || keys.includes('inputs'))
+    ) {
+      throw new Error('Error Answer Format')
     }
 
     return errors

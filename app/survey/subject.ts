@@ -17,7 +17,7 @@ export default (subject: Subject) => {
 
     return subject.opts && subject.opts.length
       ? reactive({ select: [] })
-      : reactive({})
+      : reactive({ inputs: '' })
   }
 
   const visible = (payload: { qid: string; state: boolean }) => {
@@ -57,7 +57,8 @@ export default (subject: Subject) => {
         action.type === 'survey/verifyAll' &&
         !Object.prototype.hasOwnProperty.call(state.survey.validation, qid)
       ) {
-        const ans = subject.opts && subject.opts.length ? { select: [] } : {}
+        const ans =
+          subject.opts && subject.opts.length ? { select: [] } : { inputs: '' }
 
         reply(ans)
 

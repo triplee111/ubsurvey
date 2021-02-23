@@ -12,11 +12,16 @@ export default (
     }
 
     // 驗證規則
-    if ((ans.inputs === '' || ans.select?.length === 0) && config) {
+    if (
+      ((typeof ans.inputs === 'string' && ans.inputs === '') ||
+        (Array.isArray(ans.select) && ans.select?.length === 0)) &&
+      config
+    ) {
       errors?.push({ rule: 'required' })
 
       return fn(ans, errors)
     }
+
     return fn(ans, errors)
   }
 }
