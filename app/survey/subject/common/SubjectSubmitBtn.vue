@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+import Noty from 'noty'
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex'
 
@@ -32,7 +33,14 @@ export default defineComponent({
         ansLength.value !== validatedLength.value ||
         validations.value.includes(false)
       ) {
-        // TODO: alert
+        new Noty({
+          type: 'error',
+          layout: 'topCenter',
+          theme: 'nest',
+          text: 'error',
+          timeout: 1500,
+          id: 'noty-error'
+        }).show()
 
         return false
       }

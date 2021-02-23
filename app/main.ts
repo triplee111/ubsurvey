@@ -1,6 +1,9 @@
 import '@css/reset.css'
 import '@css/main.sass'
 
+import 'noty/lib/noty.css'
+import 'noty/lib/themes/nest.css'
+
 import { createApp } from 'vue'
 import { createModal } from '@act/slime-modal'
 
