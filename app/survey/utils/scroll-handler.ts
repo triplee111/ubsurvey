@@ -1,8 +1,8 @@
-export default () => {
+export default (selector: string) => {
   let lengthBetweenDomsTop = 0
   let offset = 0
 
-  const ps = document.querySelector('.scrollContainer') as HTMLElement
+  const ps = document.querySelector(selector) as HTMLElement
   const psRect = ps.getBoundingClientRect()
 
   const scrollTo = (qid: number) => {

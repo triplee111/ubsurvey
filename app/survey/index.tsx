@@ -26,6 +26,11 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    // scroll container
+    scrollContainer: {
+      type: String,
+      default: '#survey-container'
+    },
     // 介面切換的寬度界線
     responseBoundary: {
       type: Number,
@@ -184,7 +189,7 @@ export default defineComponent({
 
     store.subscribeAction(action => {
       if (action.type === 'survey/anchor') {
-        _scrollHandler().scrollTo(action.payload)
+        _scrollHandler(props.scrollContainer).scrollTo(action.payload)
       }
     })
 
