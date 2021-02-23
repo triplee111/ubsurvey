@@ -57,7 +57,7 @@ export default (subject: Subject) => {
         action.type === 'survey/verifyAll' &&
         !Object.prototype.hasOwnProperty.call(state.survey.validation, qid)
       ) {
-        const ans = { select: [] }
+        const ans = subject.opts && subject.opts.length ? { select: [] } : {}
 
         reply(ans)
 
