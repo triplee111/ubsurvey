@@ -18,6 +18,7 @@ ModalContainer
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted, inject, Ref } from 'vue'
+import { useRouter } from 'vue-router'
 import ModalContainer from '@act/slime-modal'
 import PerfectScrollbar from '@act/perfect-scrollbar'
 
@@ -30,14 +31,34 @@ import service from '@/repository/survey'
 export default defineComponent({
   name: 'SurveyMain',
   async setup() {
+    const router = useRouter()
     const surveyData: Ref<Survey> = ref([])
     const token = inject<string>('token')
 
     onMounted(() => {
       setTimeout(() => {
         const ps = new PerfectScrollbar('#survey-container')
+        let unwatch: () => void
 
-        watch(device, () => setTimeout(() => ps.update(), 400))
+        if (device.value === 'mobile') {
+          unwatch = watch(router.currentRoute, () =>
+            setTimeout(() => ps.update(), 0)
+          )
+        }
+
+        watch(device, value => {
+          if (unwatch) {
+            unwatch()
+          }
+
+          setTimeout(() => ps.update(), 0)
+
+          if (value === 'mobile') {
+            unwatch = watch(router.currentRoute, () =>
+              setTimeout(() => ps.update(), 0)
+            )
+          }
+        })
       }, 300)
     })
 
