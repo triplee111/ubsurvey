@@ -146,7 +146,19 @@ export default defineComponent({
     multiPageRouterRecord.children?.push({
       path: '/s/submit',
       name: 'submit',
-      component: SubjectSubmit // TODO: need wrapper page
+      component: {
+        setup() {
+          return () => (
+            <div
+              aria-label="survey content"
+              class="survey-container survey-mobile"
+            >
+              <SubjectPagination />
+              <SubjectSubmit />
+            </div>
+          )
+        }
+      }
     })
 
     /**

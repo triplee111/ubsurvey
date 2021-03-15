@@ -35,7 +35,9 @@ export default defineComponent({
     const paginations = inject('paginations') as number[][]
     const pageNums = paginations.length
 
-    const pageCurrent = ref(parseInt(route.params.pno as string))
+    const pageCurrent = route.params.pno
+      ? ref(parseInt(route.params.pno as string))
+      : ref(pageNums + 1)
 
     const goPrev = () =>
       router.push({
