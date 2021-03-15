@@ -23,7 +23,7 @@
 
   select.menu(
     v-else
-    v-model="selected")
+    v-model="answer.select")
     option(
       :value="0"
       disabled
@@ -43,7 +43,6 @@ import {
   PropType,
   ref,
   computed,
-  watch,
   onMounted,
   onBeforeUnmount
 } from 'vue'
@@ -65,7 +64,6 @@ export default defineComponent({
     config: Object as PropType<SubjectConfig>
   },
   setup(props, { emit }) {
-    const selected = ref(0)
     const menuWrapper = ref<HTMLElement>(document.createElement('div'))
     const isMenuOpen = ref(false)
     const dropdownStyle = ref<DropdwonStyle>()
@@ -79,23 +77,13 @@ export default defineComponent({
 
     const currentText = computed(() => {
       const opt = props.opts.find(
-        opt => answer.value && opt.id === answer.value.select?.[0]
+        opt => answer.value && opt.id === answer.value.select
       )
       return opt ? opt.item : '尚未选择'
     })
 
-    watch(selected, (value: number) => {
-      if (value) {
-        answer.value.select = [value]
-      }
-    })
-
     onMounted(() => {
       window.addEventListener('wheel', setDropdownStyle)
-
-      if (answer.value.select && answer.value.select.length) {
-        selected.value = answer.value.select[0]
-      }
     })
 
     onBeforeUnmount(() => {
@@ -127,7 +115,6 @@ export default defineComponent({
     }
 
     return {
-      selected,
       device,
       menuWrapper,
       currentText,

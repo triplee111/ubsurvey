@@ -6,11 +6,11 @@
     v-for="(opt, key) in opts"
     :key="`opt-${opt.id}`")
     input(
-      v-model="selected"
+      v-model="answer.select"
       :id="`radio-${opt.id}`"
       :value="opt.id"
       type="radio"
-      @click="test")
+      @change="onChange(key)")
 
     label(:for="`radio-${opt.id}`")
       p
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, computed, watch, onMounted } from 'vue'
+import { defineComponent, PropType, ref, computed } from 'vue'
 
 import { Option, SubjectConfig, SubjectAnswer } from '@/types'
 import useRowCounter from '@/survey/utils/row-count-helper'
@@ -44,7 +44,6 @@ export default defineComponent({
     config: Object as PropType<SubjectConfig>
   },
   setup(props, { emit }) {
-    const selected = ref(0)
     const othersInputField = ref<HTMLElement>(document.createElement('input'))
     const columnsConfig = props.config?.optsColumn ?? {
       desktop: 2,
@@ -59,30 +58,17 @@ export default defineComponent({
       }
     })
 
-    watch(selected, (value: number) => {
-      if (value) {
-        answer.value.select = [value]
-
-        if (
-          props.config?.others &&
-          value === props.opts[props.opts.length - 1].id
-        ) {
-          othersInputField.value?.focus()
-        }
+    const onChange = (key: number) => {
+      if (props.config?.others && key === props.opts.length - 1) {
+        othersInputField.value?.focus()
       }
-    })
-
-    onMounted(() => {
-      if (answer.value.select) {
-        selected.value = answer.value.select[0]
-      }
-    })
+    }
 
     return {
-      selected,
       answer,
       othersInputField,
-      rowCount: rowCounter.rowCount
+      rowCount: rowCounter.rowCount,
+      onChange
     }
   }
 })

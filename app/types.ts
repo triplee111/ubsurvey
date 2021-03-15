@@ -80,7 +80,7 @@ export type Survey = Subject[]
 
 // survey store interface
 export interface SubjectAnswer {
-  select?: number[]
+  select?: number | number[]
   inputs?: string
 }
 
