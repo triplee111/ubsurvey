@@ -7,7 +7,7 @@
 
   img.poker(src="@img/card-before.png")
 
-  p(v-if="params.isValid") 谢谢您提供宝贵的建议
+  p(v-if="params.isValid") {{ gratitude }}
   p(v-else)
     span 很抱歉，
     span {{ params.message }}。
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { ExternalLinks } from '@/types'
@@ -33,6 +33,10 @@ export default defineComponent({
     const router = useRouter()
     const links = inject<ExternalLinks>('links')
 
+    const gratitude = computed(
+      () => props.params?.message || '谢谢您提供宝贵的建议'
+    )
+
     const confirmed = () => {
       if (props.params?.isValid) {
         router.go(0)
@@ -43,6 +47,7 @@ export default defineComponent({
 
     return {
       osLink: links?.osLink,
+      gratitude,
       confirmed
     }
   }
