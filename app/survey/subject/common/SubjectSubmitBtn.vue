@@ -2,58 +2,38 @@
 .submitBlock
   button.submit-btn(
     type="submit"
-    @click.prevent="submitSurvey") 提交
+    @click.prevent="submit") 提交
 
 </template>
 
 <script lang="ts">
-import Noty from 'noty'
-import { defineComponent, computed } from 'vue'
+import { defineComponent, inject } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'SubjectSubmitBtn',
-  setup() {
+  setup(_props, { emit }) {
     const store = useStore()
 
-    const ansLength = computed(
-      () => Object.keys(store.state.survey.surveyAns).length
-    )
-    const validatedLength = computed(
-      () => Object.keys(store.state.survey.validation).length
-    )
-    const validations = computed(() =>
-      Object.values(store.state.survey.validation)
-    )
+    const token = inject<string>('token')
 
-    const submitSurvey = async () => {
+    const submit = async () => {
       await store.dispatch('survey/verifyAll')
 
-      if (
-        ansLength.value !== validatedLength.value ||
-        validations.value.includes(false)
-      ) {
-        new Noty({
-          type: 'error',
-          layout: 'topCenter',
-          theme: 'nest',
-          text: 'error',
-          timeout: 1500,
-          id: 'noty-error'
-        }).show()
+      try {
+        await store.dispatch('survey/submit', token)
 
-        return false
+        emit('submited', { isValid: true })
+      } catch (err) {
+        emit('submited', {
+          isValid: false,
+          message: err.message
+        })
       }
-
-      // TODO: show confirm
-
-      store.dispatch('survey/submit')
-
-      // TODO: show response
     }
 
     return {
-      submitSurvey
+      submit
     }
   }
 })

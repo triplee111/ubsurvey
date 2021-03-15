@@ -10,28 +10,32 @@
 
     SurveyContainer(
       v-if="surveyData.length"
-      :survey="surveyData")
+      :survey="surveyData"
+      @submited="showConfirm")
 
 ModalContainer
 
 </template>
 
 <script lang="ts">
+import Noty from 'noty'
 import { defineComponent, ref, watch, onMounted, inject, Ref } from 'vue'
 import { useRouter } from 'vue-router'
-import ModalContainer from '@act/slime-modal'
+import ModalContainer, { useModal } from '@act/slime-modal'
 import PerfectScrollbar from '@act/perfect-scrollbar'
 
 import { Survey } from '@/types'
 
+import svService from '@/repository/survey'
 import { device } from '@/survey/utils/window-size-observer'
 import SurveyContainer from '@/survey/index'
-import service from '@/repository/survey'
 
 export default defineComponent({
   name: 'SurveyMain',
   async setup() {
     const router = useRouter()
+    const modal = useModal()
+
     const surveyData: Ref<Survey> = ref([])
     const token = inject<string>('token')
 
@@ -64,17 +68,36 @@ export default defineComponent({
 
     if (token) {
       try {
-        const data = await service.getSurvey(token)
+        const data = await svService.getSurvey(token)
         surveyData.value = data.ques
       } catch (err) {
-        alert(err)
+        new Noty({
+          type: 'error',
+          layout: 'topCenter',
+          theme: 'nest',
+          text: err.data || '伺服器错误，请稍候再试',
+          timeout: 1500,
+          id: 'noty-error'
+        }).show()
       }
     } else {
-      alert('empty token')
+      new Noty({
+        type: 'error',
+        layout: 'topCenter',
+        theme: 'nest',
+        text: '问卷接口错误，请确认 token 是否存在与是否正确',
+        timeout: 1500,
+        id: 'noty-error'
+      }).show()
+    }
+
+    const showConfirm = (payload: { isValid: boolean; message?: string }) => {
+      modal.show('confirm', { params: payload })
     }
 
     return {
-      surveyData
+      surveyData,
+      showConfirm
     }
   },
   components: {

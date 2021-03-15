@@ -1,36 +1,49 @@
 <template lang="pug">
 #ModalConfirm
-  img.material(:src="require('@img/material-after.png')")
+  img.material(src="@img/material-after.png")
   img.modalClose(
-    :src="require('@img/close.png')"
-    @click="close()")
+    src="@img/close.png"
+    @click="confirmed")
 
-  img.poker(:src="require('@img/card-before.png')")
+  img.poker(src="@img/card-before.png")
 
-  p(v-if="isVerified") 谢谢您提供宝贵的建议
+  p(v-if="params.isValid") 谢谢您提供宝贵的建议
   p(v-else)
     span 很抱歉，
-    span 您不在本次问卷调查名单中。
-  a.goback(:href="links.osLink") 回到官网
+    span {{ params.message }}。
+
+  a.goback(
+    :href="osLink"
+    target="_self") 回到官网
 
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { useModal } from '@act/slime-modal'
-import { useStore } from 'vuex'
+import { defineComponent, inject } from 'vue'
+import { useRouter } from 'vue-router'
+
+import { ExternalLinks } from '@/types'
 
 export default defineComponent({
   name: 'ModalConfirm',
-  inject: ['links'],
-  setup() {
-    const modal = useModal()
-    const store = useStore()
-    const isVerified = computed(() => store.state.survey.isVerified)
+  props: {
+    params: Object
+  },
+  setup(props, { emit }) {
+    const router = useRouter()
+    const links = inject<ExternalLinks>('links')
+
+    const confirmed = () => {
+      if (props.params?.isValid) {
+        router.go(0)
+      } else {
+        emit('close')
+      }
+    }
 
     return {
-      close: modal.close,
-      isVerified
+      osLink: links?.osLink,
+      confirmed
     }
   }
 })

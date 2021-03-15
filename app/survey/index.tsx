@@ -100,19 +100,23 @@ export default defineComponent({
     const singlePageRouterRecord = {
       path: '/',
       name: 'survey',
-      component: {
-        setup() {
+      component: defineComponent({
+        setup(_props, { emit }) {
           return () => (
             <div
               aria-label="survey contentainer"
               class="survey-container survey-desktop"
             >
               {renderer.single}
-              <SubjectSubmit />
+              <SubjectSubmit
+                {...{
+                  onSubmited: (payload: { isValid: boolean, message?: string }) => emit('submited', payload)
+                }}
+              />
             </div>
           )
         }
-      }
+      })
     }
 
     const multiPageRouterRecord: RouteRecordRaw = renderer.multi
@@ -146,19 +150,23 @@ export default defineComponent({
     multiPageRouterRecord.children?.push({
       path: '/s/submit',
       name: 'submit',
-      component: {
-        setup() {
+      component: defineComponent({
+        setup(_props, { emit }) {
           return () => (
             <div
               aria-label="survey content"
               class="survey-container survey-mobile"
             >
               <SubjectPagination />
-              <SubjectSubmit />
+              <SubjectSubmit
+                {...{
+                  onSubmited: (payload: { isValid: boolean, message?: string }) => emit('submited', payload)
+                }}
+              />
             </div>
           )
         }
-      }
+      })
     })
 
     /**
