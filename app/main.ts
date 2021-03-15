@@ -27,8 +27,8 @@ const EXTERNAL_LINKS = {
 }
 
 /**
- * index 0 為後端設定的題目類型字串，index 1 為前台製定的元件名稱(kebab-case)
- * 可依據需求自行調整與擴充
+ * index 0 為後端設定的題目類型，index 1 為前台製定的元件名稱(kebab-case)
+ * 可依據需求自行調整與擴充契約地圖
  */
 const SubjectType = new Map([
   ['choice', 'choice'],

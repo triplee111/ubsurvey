@@ -5,7 +5,6 @@ section
     slot(name="before")
 
     .questionBlock(v-if="$slots.question")
-      //- TODO: question no
       slot(name="question")
 
     .helperBlock(v-if="$slots.helper")
