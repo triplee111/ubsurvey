@@ -75,7 +75,7 @@ const actions: ActionTree<typeof state, State> = {
 
     try {
       await svService.sendSurvey(token, {
-        account,
+        user: account,
         answers: state.surveyAns
       })
 

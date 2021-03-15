@@ -12,15 +12,15 @@ const getSurvey = (token: string) => {
 const sendSurvey = (
   token: string,
   {
-    account,
+    user,
     answers
   }: {
-    account: string
+    user: string
     answers: { [qid: string]: SubjectAnswer }
   }
 ) => {
   return service.post(`fsv/r/t/${token}`, {
-    account,
+    user,
     answers
   })
 }
