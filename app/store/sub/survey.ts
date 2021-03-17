@@ -68,15 +68,20 @@ const actions: ActionTree<typeof state, State> = {
       throw new Error('validate failed')
     }
   },
-  submit: async ({ state, dispatch, rootState }, token) => {
+  submit: async ({ state, dispatch, rootState }, { token, mark }) => {
     const account = rootState.auth.user.account
+
+    if (!account) {
+      throw new Error('您必须先登入本次活动')
+    }
 
     dispatch('progress', true, { root: true })
 
     try {
       await svService.sendSurvey(token, {
         user: account,
-        answers: state.surveyAns
+        answers: state.surveyAns,
+        mark
       })
 
       dispatch('reset')

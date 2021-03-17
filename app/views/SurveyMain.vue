@@ -1,17 +1,17 @@
 <template lang="pug">
 #survey
-  .title 填问卷 豪礼三选一
-  .subTitle 礼品、彩金、高额存送任您挑
+  .title {{ info.title }}
+  .subTitle {{ info.intro }}
 
   #survey-container.scrollContainer
     .titleBlock
-      .mbTitle 填问卷 豪礼三选一
-      .mbSubTitle 礼品、彩金、高额存送任您挑
+      .mbTitle {{ info.title }}
+      .mbSubTitle {{ info.intro }}
 
     SurveyContainer(
       v-if="surveyData.length"
       :survey="surveyData"
-      @submited="showConfirm")
+      @confirmed="showConfirm")
 
 ModalContainer
 
@@ -19,7 +19,15 @@ ModalContainer
 
 <script lang="ts">
 import Noty from 'noty'
-import { defineComponent, ref, watch, onMounted, inject, Ref } from 'vue'
+import {
+  defineComponent,
+  ref,
+  watch,
+  onMounted,
+  provide,
+  inject,
+  Ref
+} from 'vue'
 import { useRouter } from 'vue-router'
 import ModalContainer, { useModal } from '@act/slime-modal'
 import PerfectScrollbar from '@act/perfect-scrollbar'
@@ -36,8 +44,16 @@ export default defineComponent({
     const router = useRouter()
     const modal = useModal()
 
+    const info = ref({
+      title: '填问卷 豪礼三选一',
+      intro: '礼品、彩金、高额存送任您挑',
+      confirm: '谢谢您提供宝贵的建议'
+    })
     const surveyData: Ref<Survey> = ref([])
     const token = inject<string>('token')
+    const timestart = ref(0)
+
+    provide('timestart', timestart)
 
     onMounted(() => {
       setTimeout(() => {
@@ -69,7 +85,15 @@ export default defineComponent({
     if (token) {
       try {
         const data = await svService.getSurvey(token)
+
         surveyData.value = data.ques
+
+        info.value = {
+          title: data.title || info.value.title,
+          intro: data.intro || info.value.intro,
+          confirm: data.confirm || info.value.confirm
+        }
+        timestart.value = data.mark
       } catch (err) {
         new Noty({
           type: 'error',
@@ -92,10 +116,20 @@ export default defineComponent({
     }
 
     const showConfirm = (payload: { isValid: boolean; message?: string }) => {
-      modal.show('confirm', { params: payload })
+      if (payload.isValid && !payload.message) {
+        modal.show('confirm', {
+          params: {
+            ...payload,
+            message: info.value.confirm // 後台設定的確認或感謝文字
+          }
+        })
+      } else {
+        modal.show('confirm', { params: payload })
+      }
     }
 
     return {
+      info,
       surveyData,
       showConfirm
     }

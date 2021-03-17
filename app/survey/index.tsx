@@ -1,4 +1,4 @@
-import { defineComponent, PropType, resolveComponent, computed, provide } from 'vue'
+import { defineComponent, PropType, resolveComponent, computed, provide, inject, Ref } from 'vue'
 import { useStore } from 'vuex'
 import { RouterView, useRouter, RouteRecordRaw } from 'vue-router'
 
@@ -37,7 +37,7 @@ export default defineComponent({
       default: 1200
     }
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, emit }) {
     const store = useStore()
     const router = useRouter()
     const compMap = useComponentsMap()
@@ -49,6 +49,25 @@ export default defineComponent({
     }
     let page = 0 // 分頁記錄
     const subjectNums = props.survey.length - 1
+    const token = inject<string>('token')
+    const timestart = inject<Ref<number>>('timestart')
+
+    // 定義送出的處理流程
+    const surveySubmit = async () => {
+      try {
+        await store.dispatch('survey/submit', {
+          token,
+          mark: timestart?.value
+        })
+
+        emit('confirmed', { isValid: true })
+      } catch (err) {
+        emit('confirmed', {
+          isValid: false,
+          message: err.message
+        })
+      }
+    }
 
     /**
      * 此處的目的是希望依據問卷資料生成對應種類的題目元件，所以不會直接解析所有種類的元件或是預載範本資料
@@ -110,7 +129,7 @@ export default defineComponent({
               {renderer.single}
               <SubjectSubmit
                 {...{
-                  onSubmited: (payload: { isValid: boolean, message?: string }) => emit('submited', payload)
+                  onSubmited: surveySubmit
                 }}
               />
             </div>
@@ -160,7 +179,7 @@ export default defineComponent({
               <SubjectPagination />
               <SubjectSubmit
                 {...{
-                  onSubmited: (payload: { isValid: boolean, message?: string }) => emit('submited', payload)
+                  onSubmited: surveySubmit
                 }}
               />
             </div>

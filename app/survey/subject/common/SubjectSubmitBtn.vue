@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue'
+import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -15,21 +15,10 @@ export default defineComponent({
   setup(_props, { emit }) {
     const store = useStore()
 
-    const token = inject<string>('token')
-
     const submit = async () => {
       await store.dispatch('survey/verifyAll')
 
-      try {
-        await store.dispatch('survey/submit', token)
-
-        emit('submited', { isValid: true })
-      } catch (err) {
-        emit('submited', {
-          isValid: false,
-          message: err.message
-        })
-      }
+      emit('submited')
     }
 
     return {
