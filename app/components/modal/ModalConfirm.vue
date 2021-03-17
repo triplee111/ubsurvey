@@ -23,6 +23,7 @@ import { defineComponent, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { ExternalLinks } from '@/types'
+import useAuth from '@/components/auth'
 
 export default defineComponent({
   name: 'ModalConfirm',
@@ -32,9 +33,12 @@ export default defineComponent({
   setup(props, { emit }) {
     const router = useRouter()
     const links = inject<ExternalLinks>('links')
+    const auth = useAuth()
 
     const confirmed = () => {
       if (props.params?.isValid) {
+        auth.signout() // 登出
+
         links?.osLink ? (window.location.href = links.osLink) : router.go(0)
       } else {
         emit('close')
