@@ -120,7 +120,7 @@ export default defineComponent({
       path: '/',
       name: 'survey',
       component: defineComponent({
-        setup(_props, { emit }) {
+        setup() {
           return () => (
             <div
               aria-label="survey contentainer"
@@ -170,7 +170,7 @@ export default defineComponent({
       path: '/s/submit',
       name: 'submit',
       component: defineComponent({
-        setup(_props, { emit }) {
+        setup() {
           return () => (
             <div
               aria-label="survey content"
