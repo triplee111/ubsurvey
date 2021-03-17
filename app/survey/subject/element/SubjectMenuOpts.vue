@@ -110,11 +110,12 @@ export default defineComponent({
     }
 
     const handleSelect = (id: number) => {
-      answer.value.select = [id]
+      answer.value.select = id
       isMenuOpen.value = false
     }
 
     return {
+      answer,
       device,
       menuWrapper,
       currentText,
