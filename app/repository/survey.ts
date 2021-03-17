@@ -6,7 +6,7 @@ import { SubjectAnswer } from '@/types'
 const service = useAgent<AxiosRequestConfig>()
 
 const getSurvey = (token: string) => {
-  return service.get(`fsv/s/t/${token}/l/zh`)
+  return service.get(`fsv/s/t/${token}/p/${process.env.PROJ_PLATFORM}`)
 }
 
 const sendSurvey = (
@@ -21,7 +21,7 @@ const sendSurvey = (
     mark: number
   }
 ) => {
-  return service.post(`fsv/r/t/${token}/l/zh`, {
+  return service.post(`fsv/r/t/${token}/p/${process.env.PROJ_PLATFORM}`, {
     user,
     answers,
     mark
