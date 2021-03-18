@@ -11,6 +11,7 @@
     SurveyContainer(
       v-if="surveyData.length"
       :survey="surveyData"
+      scrollContainer="#survey-container"
       @confirmed="showConfirm")
 
 ModalContainer
@@ -46,9 +47,9 @@ export default defineComponent({
 
     const info = ref({
       title: '填问卷 豪礼三选一',
-      intro: '礼品、彩金、高额存送任您挑',
-      confirm: '谢谢您提供宝贵的建议'
+      intro: '礼品、彩金、高额存送任您挑'
     })
+    const confirm = ref('')
     const surveyData: Ref<Survey> = ref([])
     const token = inject<string>('token')
     const timestart = ref(0)
@@ -82,29 +83,7 @@ export default defineComponent({
       }, 300)
     })
 
-    if (token) {
-      try {
-        const data = await svService.getSurvey(token)
-
-        surveyData.value = data.ques
-
-        info.value = {
-          title: data.title || info.value.title,
-          intro: data.intro || info.value.intro,
-          confirm: data.confirm || info.value.confirm
-        }
-        timestart.value = data.mark
-      } catch (err) {
-        new Noty({
-          type: 'error',
-          layout: 'topCenter',
-          theme: 'nest',
-          text: err.data || '伺服器错误，请稍候再试',
-          timeout: 1500,
-          id: 'noty-error'
-        }).show()
-      }
-    } else {
+    if (!token) {
       new Noty({
         type: 'error',
         layout: 'topCenter',
@@ -115,12 +94,34 @@ export default defineComponent({
       }).show()
     }
 
+    try {
+      const data = await svService.getSurvey(token as string)
+
+      surveyData.value = data.ques
+
+      info.value = {
+        title: data.title || info.value.title,
+        intro: data.intro || info.value.intro
+      }
+      confirm.value = data.confirm
+      timestart.value = data.mark
+    } catch (err) {
+      new Noty({
+        type: 'error',
+        layout: 'topCenter',
+        theme: 'nest',
+        text: err.data || '伺服器错误，请稍候再试',
+        timeout: 1500,
+        id: 'noty-error'
+      }).show()
+    }
+
     const showConfirm = (payload: { isValid: boolean; message?: string }) => {
       if (payload.isValid && !payload.message) {
         modal.show('confirm', {
           params: {
             ...payload,
-            message: info.value.confirm // 後台設定的確認或感謝文字
+            message: confirm.value
           }
         })
       } else {
