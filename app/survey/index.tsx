@@ -29,7 +29,7 @@ export default defineComponent({
     // scroll container
     scrollContainer: {
       type: String,
-      default: '#survey-container'
+      default: ''
     },
     // 介面切換的寬度界線
     responseBoundary: {
