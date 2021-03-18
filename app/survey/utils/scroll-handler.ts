@@ -2,8 +2,8 @@ export default (selector: string) => {
   let lengthBetweenDomsTop = 0
   let offset = 0
 
-  const ps = document.querySelector(selector) as HTMLElement
-  const psRect = ps.getBoundingClientRect()
+  const box = document.querySelector(selector) as HTMLElement
+  const boxRect = box.getBoundingClientRect()
 
   const scrollTo = (qid: number) => {
     const target = document.getElementById(`question-${qid}`)
@@ -13,7 +13,7 @@ export default (selector: string) => {
 
       lengthBetweenDomsTop = Number(
         Math.round(
-          (Math.round(subjectRect.top) - Math.round(psRect.top) - 10) * 100
+          (Math.round(subjectRect.top) - Math.round(boxRect.top) - 10) * 100
         ) + 'e-2'
       )
 
@@ -26,12 +26,12 @@ export default (selector: string) => {
   }
 
   const smoothScroll = (distance: number) => {
-    ps.scrollTop += offset
+    box.scrollTop += offset
     distance += offset
 
     if (
       distance <= lengthBetweenDomsTop &&
-      ps.clientHeight + ps.scrollTop < ps.scrollHeight
+      box.clientHeight + box.scrollTop < box.scrollHeight
     ) {
       window.requestAnimationFrame(() => {
         smoothScroll(distance)
