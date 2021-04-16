@@ -18,7 +18,6 @@ SubjectLayout(v-if="isShow")
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-extra-semi */
 import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
@@ -88,7 +87,6 @@ export default defineComponent({
       config: props.context?.config,
       // reactive and methods
       isShow,
-      toggle: h?.toggle,
       anchor: h?.anchor,
       helpeText: message,
       getOptsUiComp,
