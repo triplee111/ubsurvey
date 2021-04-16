@@ -18,6 +18,7 @@ SubjectLayout(v-if="isShow")
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-extra-semi */
 import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
@@ -39,6 +40,7 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
+    const isShow = h.visibility
     const answer = h.init()
 
     // Container & Validator 不負責產生提示顯示文案
@@ -47,10 +49,28 @@ export default defineComponent({
       h.errors.value.length ? '此题为必选题目' : ''
     )
 
-    watch(answer, (value: SubjectAnswer) => {
-      h.anchor()
-      h.reply(value)
-    })
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    let unwatchAns: () => void = () => {}
+
+    watch(
+      isShow,
+      (value: boolean) => {
+        if (value) {
+          unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            h.anchor()
+            h.reply(value)
+          })
+        } else {
+          unwatchAns()
+          ;(answer as { select: [] }).select = []
+
+          if (Object.prototype.hasOwnProperty.call(answer, 'inputs')) {
+            delete (answer as { inputs?: string }).inputs
+          }
+        }
+      },
+      { immediate: true }
+    )
 
     const getOptsUiComp = () => {
       const ui = props.context.config?.optsUi
@@ -67,8 +87,8 @@ export default defineComponent({
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
-      isShow: h?.visibility,
-      visible: h?.visible,
+      isShow,
+      toggle: h?.toggle,
       anchor: h?.anchor,
       helpeText: message,
       getOptsUiComp,

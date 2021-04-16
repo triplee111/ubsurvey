@@ -17,6 +17,7 @@ SubjectLayout(v-if="isShow")
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-extra-semi */
 import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
@@ -37,6 +38,7 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
+    const isShow = h.visibility
     const answer = h.init()
 
     const message = computed(() => {
@@ -61,10 +63,28 @@ export default defineComponent({
       }
     })
 
-    watch(answer, (value: SubjectAnswer) => {
-      h.anchor()
-      h.reply(value)
-    })
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    let unwatchAns: () => void = () => {}
+
+    watch(
+      isShow,
+      (value: boolean) => {
+        if (value) {
+          unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            h.anchor()
+            h.reply(value)
+          })
+        } else {
+          unwatchAns()
+          ;(answer as { select: [] }).select = []
+
+          if (Object.prototype.hasOwnProperty.call(answer, 'inputs')) {
+            delete (answer as { inputs?: string }).inputs
+          }
+        }
+      },
+      { immediate: true }
+    )
 
     return {
       // static
@@ -76,8 +96,8 @@ export default defineComponent({
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
-      isShow: h?.visibility,
-      visible: h?.visible,
+      isShow,
+      toggle: h?.toggle,
       helpeText: message,
       answer
     }
