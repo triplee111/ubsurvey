@@ -37,8 +37,8 @@ export interface IResizeCallBack {
 export interface Option {
   id: number
   item: string
-  jumpTo?: number // 跳題
-  concatTo?: number // 接題
+  jump?: number[] // 跳題
+  concat?: number[] // 接題
 }
 
 export interface ValidateRules {
