@@ -8,6 +8,7 @@ const SET_VALIDATION = 'SET_VALIDATION'
 const SET_VISIBILITY = 'SET_VISIBILITY'
 const SET_ANSWER = 'SET_ANSWER'
 const SET_FLAG = 'SET_FLAG'
+const DROP_ANSWER = 'DROP_ANSWER'
 const RESET_SURVEY_STATE = 'RESET_SURVEY_STATE'
 
 const state: SurveyState = {
@@ -30,6 +31,10 @@ const mutations: MutationTree<typeof state> = {
   [SET_FLAG](state, qid) {
     state.subjectFlag = qid
   },
+  [DROP_ANSWER](state, qid) {
+    delete state.surveyAns[qid]
+    delete state.validation[qid]
+  },
   [RESET_SURVEY_STATE](state) {
     state.validation = {}
     state.surveyAns = {}
@@ -41,7 +46,7 @@ const actions: ActionTree<typeof state, State> = {
   verify({ commit }, payload) {
     commit(SET_VALIDATION, payload)
   },
-  visible({ commit }, payload) {
+  toggle({ commit }, payload) {
     commit(SET_VISIBILITY, payload)
   },
   answer({ commit }, payload) {
@@ -90,6 +95,9 @@ const actions: ActionTree<typeof state, State> = {
     } finally {
       dispatch('progress', false, { root: true })
     }
+  },
+  dropAnswer({ commit }, qid) {
+    commit(DROP_ANSWER, qid)
   },
   reset({ commit }) {
     commit(RESET_SURVEY_STATE)
