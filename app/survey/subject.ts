@@ -1,7 +1,8 @@
+import difference from 'lodash/difference'
 import { useStore } from 'vuex'
 import { computed, watch, ref, reactive, Ref } from 'vue'
 
-import { Subject, SubjectAnswer, ErrorRecord } from '@/types'
+import { Subject, SubjectAnswer, Option, ErrorRecord } from '@/types'
 import { createValidator } from '@/survey/validator'
 
 export default (subject: Subject) => {
@@ -20,11 +21,20 @@ export default (subject: Subject) => {
       : reactive({ inputs: '' })
   }
 
-  const visible = (payload: { qid: string; state: boolean }) => {
-    store.dispatch('survey/visible', payload)
+  const toggle = (payload: { qid: string; state: boolean }) => {
+    store.dispatch('survey/toggle', payload)
   }
 
   const reply = (ans: SubjectAnswer) => {
+    // concat handler
+    if (subject.opts) {
+      concatHandler(
+        subject.opts,
+        ans.select as number | number[],
+        answer.value?.select
+      ) // 第三個參數為 store 中的舊數值
+    }
+
     store.dispatch('survey/answer', { qid, ans })
   }
 
@@ -32,13 +42,63 @@ export default (subject: Subject) => {
     store.dispatch('survey/anchor', subject.id)
   }
 
-  if (subject.validate && subject.visible) {
+  const concatHandler = async (
+    opts: Option[],
+    select: number | number[],
+    preSelect?: number | number[]
+  ) => {
+    if (preSelect) {
+      const canceled = Array.isArray(preSelect)
+        ? difference(preSelect, select as number[])
+        : [preSelect]
+
+      for (const oid of canceled) {
+        const opt = opts.find(opt => opt.id === oid)
+
+        if (opt?.concat) {
+          for (const qid of opt.concat) {
+            store.dispatch('survey/dropAnswer', qid)
+
+            toggle({
+              qid: qid.toString(),
+              state: false
+            })
+          }
+        }
+      }
+
+      const added = Array.isArray(select)
+        ? difference(select, preSelect as number[])
+        : [select]
+    }
+
+    const added = Array.isArray(select)
+      ? preSelect
+        ? difference(select, preSelect as number[])
+        : select
+      : [select]
+
+    for (const oid of added) {
+      const opt = opts.find(opt => opt.id === oid)
+
+      if (opt?.concat) {
+        for (const qid of opt.concat) {
+          toggle({
+            qid: qid.toString(),
+            state: true
+          })
+        }
+      }
+    }
+  }
+
+  if (subject.validate) {
     const v = createValidator(subject.validate) // 注入設定產生對應的驗證器
 
     watch(
       answer,
       (value: SubjectAnswer) => {
-        if (value) {
+        if (value && visibility.value) {
           // 在沒有設定 break = true 的情況，每一次驗證會驗證該題設定的全部規則
           // 若目標規則有錯誤會產生一個錯誤物件，最後回傳一組錯誤物件陣列
           errors.value = v.verify(value)
@@ -55,7 +115,8 @@ export default (subject: Subject) => {
     store.subscribeAction((action, state) => {
       if (
         action.type === 'survey/verifyAll' &&
-        !Object.prototype.hasOwnProperty.call(state.survey.validation, qid)
+        !Object.prototype.hasOwnProperty.call(state.survey.validation, qid) &&
+        visibility.value
       ) {
         const ans =
           subject.opts && subject.opts.length ? { select: [] } : { inputs: '' }
@@ -72,14 +133,15 @@ export default (subject: Subject) => {
     })
   }
 
-  visible({ qid, state: subject.visible }) // default visibility
+  toggle({ qid, state: subject.visible }) // default visibility
 
   return {
+    preAns: answer,
     visibility,
     errors,
     init,
     reply,
-    visible,
+    toggle,
     anchor
   }
 }
