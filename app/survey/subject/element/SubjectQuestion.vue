@@ -1,39 +1,29 @@
 <template lang="pug">
 .question
   p.qNo(
-    v-if="isQnoVisible"
+    v-if="que.no"
     ref="qNoRef"
-    :style="`left: -${width + 5}px`"
-  ) {{ `${qno}.` }}
-  p.qContent {{ content }}
+    :style="`left: -${width + 5}px`") {{ `${que.no}.` }}
+
+  p.qContent {{ que.content }}
+
 </template>
+
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, computed, PropType } from 'vue'
+
 export default defineComponent({
   name: 'SubjectQuestion',
   props: {
-    qno: {
-      type: Number,
-      default: 0
-    },
-    content: {
-      type: String,
-      default: ''
-    },
-    isQnoVisible: {
-      type: Boolean,
-      default: true
-    }
+    que: Object as PropType<{
+      no?: number
+      content: string
+    }>,
+    content: String
   },
   setup() {
-    const qNoRef = ref<HTMLElement>()
-    const width = ref(0)
-
-    onMounted(() => {
-      if (qNoRef.value) {
-        width.value = qNoRef.value.offsetWidth
-      }
-    })
+    const qNoRef = ref<HTMLElement>(document.createElement('p'))
+    const width = computed(() => qNoRef.value.offsetWidth)
 
     return {
       qNoRef,
@@ -42,11 +32,14 @@ export default defineComponent({
   }
 })
 </script>
+
 <style lang="stylus" scoped>
 .question
-  position: relative;
+  position relative
   display flex
   align-items center
   .qNo
     position absolute
+    font-size 0.75rem
+    top 2.5px
 </style>

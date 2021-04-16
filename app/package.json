@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@act/perfect-scrollbar": "^1.5.1",
     "@act/service-agent": "^0.1.6",
-    "@act/slime-modal": "^0.2.7"
+    "@act/slime-modal": "^0.2.7",
+    "noty": "^3.2.0-beta-deprecated"
   }
 }

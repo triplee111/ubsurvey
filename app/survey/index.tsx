@@ -1,13 +1,14 @@
-import { defineComponent, PropType, resolveComponent, computed, provide } from 'vue'
+import { defineComponent, PropType, resolveComponent, computed, provide, inject, Ref } from 'vue'
 import { useStore } from 'vuex'
 import { RouterView, useRouter, RouteRecordRaw } from 'vue-router'
 
 import { Survey } from '@/types'
 
-import SubjectPagination from './subject/element/SubjectPagination.vue'
-import SubjectSubmit from './subject/element/SubjectSubmit.vue'
+import SubjectPagination from './subject/common/SubjectPagination.vue'
+import SubjectSubmit from './subject/common/SubjectSubmitBtn.vue'
 
 import _windowSizeObserver from './utils/window-size-observer'
+import _scrollHandler from './utils/scroll-handler'
 import { useComponentsMap } from './register'
 
 const paginations: number[][] = [[]]
@@ -20,13 +21,23 @@ export default defineComponent({
       type: Object as PropType<Survey>,
       default: []
     },
+    // parent route name
+    parentRouteName: {
+      type: String,
+      default: ''
+    },
+    // scroll container
+    scrollContainer: {
+      type: String,
+      default: ''
+    },
     // 介面切換的寬度界線
     responseBoundary: {
       type: Number,
       default: 1200
     }
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, emit }) {
     const store = useStore()
     const router = useRouter()
     const compMap = useComponentsMap()
@@ -38,12 +49,30 @@ export default defineComponent({
     }
     let page = 0 // 分頁記錄
     const subjectNums = props.survey.length - 1
+    const token = inject<string>('token')
+    const timestart = inject<Ref<number>>('timestart')
+
+    // 定義送出的處理流程
+    const surveySubmit = async () => {
+      try {
+        await store.dispatch('survey/submit', {
+          token,
+          mark: timestart?.value
+        })
+
+        emit('confirmed', { isValid: true })
+      } catch (err) {
+        emit('confirmed', {
+          isValid: false,
+          message: err.message
+        })
+      }
+    }
 
     /**
      * 此處的目的是希望依據問卷資料生成對應種類的題目元件，所以不會直接解析所有種類的元件或是預載範本資料
      *
      * 但因為 resolve component 只能在 setup 作用域裡使用(無法異步執行)，需要 props:survey 確定有資料再行驅動
-     * 目前是透過在父元件使用 v-if 控制啟動流程
      */
     const renderer = props.survey.reduce((acc, subject, index) => {
       const compName = compMap.get(subject.type)
@@ -90,7 +119,7 @@ export default defineComponent({
     const singlePageRouterRecord = {
       path: '/',
       name: 'survey',
-      component: {
+      component: defineComponent({
         setup() {
           return () => (
             <div
@@ -98,11 +127,15 @@ export default defineComponent({
               class="survey-container survey-desktop"
             >
               {renderer.single}
-              <SubjectSubmit />
+              <SubjectSubmit
+                {...{
+                  onSubmited: surveySubmit
+                }}
+              />
             </div>
           )
         }
-      }
+      })
     }
 
     const multiPageRouterRecord: RouteRecordRaw = renderer.multi
@@ -136,16 +169,39 @@ export default defineComponent({
     multiPageRouterRecord.children?.push({
       path: '/s/submit',
       name: 'submit',
-      component: SubjectSubmit // TODO: need wrapper page
+      component: defineComponent({
+        setup() {
+          return () => (
+            <div
+              aria-label="survey content"
+              class="survey-container survey-mobile"
+            >
+              <SubjectPagination />
+              <SubjectSubmit
+                {...{
+                  onSubmited: surveySubmit
+                }}
+              />
+            </div>
+          )
+        }
+      })
     })
 
+    /**
+     * 介面互動設定，包含 window resize & anchor scroll
+     */
     _windowSizeObserver((device: string) => {
       if (device === 'mobile') {
         let pno = 1
 
         const flag = computed(() => store.state.survey.subjectFlag)
 
-        router.addRoute(multiPageRouterRecord)
+        if (props.parentRouteName) {
+          router.addRoute(props.parentRouteName, multiPageRouterRecord)
+        } else {
+          router.addRoute(multiPageRouterRecord)
+        }
 
         if (flag.value === -1) {
           router.push({ name: 'page1', params: { pno } })
@@ -160,10 +216,21 @@ export default defineComponent({
           pno++
         }
       } else {
-        router.addRoute(singlePageRouterRecord)
+        if (props.parentRouteName) {
+          router.addRoute(props.parentRouteName, singlePageRouterRecord)
+        } else {
+          router.addRoute(singlePageRouterRecord)
+        }
+
         router.push({ name: 'survey' })
       }
     }, props.responseBoundary)
+
+    store.subscribeAction(action => {
+      if (action.type === 'survey/anchor') {
+        _scrollHandler(props.scrollContainer).scrollTo(action.payload)
+      }
+    })
 
     return () => (<RouterView />)
   },

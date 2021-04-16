@@ -1,6 +1,9 @@
 import '@css/reset.css'
 import '@css/main.sass'
 
+import 'noty/lib/noty.css'
+import 'noty/lib/themes/nest.css'
+
 import { createApp } from 'vue'
 import { createModal } from '@act/slime-modal'
 
@@ -24,8 +27,8 @@ const EXTERNAL_LINKS = {
 }
 
 /**
- * index 0 為後端設定的題目類型字串，index 1 為前台製定的元件名稱(kebab-case)
- * 可依據需求自行調整與擴充
+ * index 0 為後端設定的題目類型，index 1 為前台製定的元件名稱(kebab-case)
+ * 可依據需求自行調整與擴充契約地圖
  */
 const SubjectType = new Map([
   ['choice', 'choice'],
@@ -41,7 +44,7 @@ const app = createApp(App)
 
 actService
   .init()
-  .then(({ actTitle, links, copy }: InitResolve) => {
+  .then(({ actTitle, links, copy, token }: InitResolve & { token: string }) => {
     app
       .provide('actTitle', actTitle)
       .provide('links', {
@@ -49,6 +52,7 @@ actService
         ...links
       })
       .provide('copy', copy)
+      .provide('token', token)
   })
   .catch(() => {
     app

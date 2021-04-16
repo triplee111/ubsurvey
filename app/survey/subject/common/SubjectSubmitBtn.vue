@@ -2,7 +2,7 @@
 .submitBlock
   button.submit-btn(
     type="submit"
-    @click.prevent="submitSurvey") 提交
+    @click.prevent="submit") 提交
 
 </template>
 
@@ -11,16 +11,18 @@ import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: 'SubjectSubmit',
-  setup() {
+  name: 'SubjectSubmitBtn',
+  setup(_props, { emit }) {
     const store = useStore()
 
-    const submitSurvey = () => {
-      store.dispatch('survey/submit')
+    const submit = async () => {
+      await store.dispatch('survey/verifyAll')
+
+      emit('submited')
     }
 
     return {
-      submitSurvey
+      submit
     }
   }
 })

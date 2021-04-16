@@ -3,29 +3,26 @@ SubjectLayout(v-if="isShow")
   template(#question)
     SubjectQuestion(
       :id="`question-${qid}`"
-      :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :que="question")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     input.subject-input-text-field(
-      v-model.lazy="textInput"
-      @focusin="anchor"
-      type="text")
+      v-model.trim.lazy="answer.inputs"
+      type="text"
+      @focusin="anchor")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, computed, watch } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
-import { Subject } from '@/types'
+import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
-import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectLayout from './common/SubjectLayout.vue'
 import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
@@ -37,30 +34,47 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const textInput = ref('')
-
     const h = useSubjectHandler(props.context)
+
+    const isShow = h.visibility
+    const answer = h.init()
 
     const message = computed(() =>
       h.errors.value.length ? '此栏位为必填栏位' : ''
     )
 
-    const answer = (value: string) => h.reply({ inputs: value })
-    watch(textInput, value => answer(value))
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    let unwatchAns: () => void = () => {}
+
+    watch(
+      isShow,
+      (value: boolean) => {
+        if (value) {
+          unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            h.anchor()
+            h.reply(value)
+          })
+        } else {
+          unwatchAns()
+          ;(answer as { inputs?: string }).inputs = ''
+        }
+      },
+      { immediate: true }
+    )
 
     return {
       // static
       qid: props.context?.id,
-      qno: props.context?.qno,
-      qContent: props.context?.content,
-      isQnoVisible: props.context?.isQnoVisible,
+      question: {
+        no: props.context?.qno,
+        content: props.context.content
+      },
       config: props.context?.config,
       // reactive and methods
-      isShow: h?.visibility,
-      visible: h?.visible,
+      isShow,
       anchor: h?.anchor,
       helpeText: message,
-      textInput
+      answer
     }
   },
   components: {

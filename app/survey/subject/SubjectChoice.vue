@@ -3,34 +3,30 @@ SubjectLayout(v-if="isShow")
   template(#question)
     SubjectQuestion(
       :id="`question-${qid}`"
-      :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :que="question")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     component(
+      v-model:ans="answer"
       :is="getOptsUiComp()"
-      :qid="qid"
       :opts="opts"
-      :config="config"
-      @updateSelect="answer")
+      :config="config")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
-import SubjectLayout from './element/SubjectLayout.vue'
+import SubjectLayout from './common/SubjectLayout.vue'
+import SubjectQuestion from './element/SubjectQuestion.vue'
 import RadioboxOpts from './element/SubjectRadioOpts.vue'
 import MenuOpts from './element/SubjectMenuOpts.vue'
-import SubjectQuestion from './element/SubjectQuestion.vue'
 
 export default defineComponent({
   name: 'SubjectChoice',
@@ -43,16 +39,37 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
+    const isShow = h.visibility
+    const answer = h.init()
+
     // Container & Validator 不負責產生提示顯示文案
     // 由個別元件控制或額外設定文案機制
     const message = computed(() =>
-      h.errors.value.length ? '此栏位为必填栏位' : ''
+      h.errors.value.length ? '此题为必选题目' : ''
     )
 
-    const answer = (payload: SubjectAnswer) => {
-      h.anchor()
-      h.reply(payload)
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    let unwatchAns: () => void = () => {}
+
+    watch(
+      isShow,
+      (value: boolean) => {
+        if (value) {
+          unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            h.anchor()
+            h.reply(value)
+          })
+        } else {
+          unwatchAns()
+          ;(answer as { select: [] }).select = []
+
+          if (Object.prototype.hasOwnProperty.call(answer, 'inputs')) {
+            delete (answer as { inputs?: string }).inputs
+          }
+        }
+      },
+      { immediate: true }
+    )
 
     const getOptsUiComp = () => {
       const ui = props.context.config?.optsUi
@@ -62,18 +79,17 @@ export default defineComponent({
     return {
       // static
       qid: props.context?.id,
-      qno: props.context?.qno,
-      qContent: props.context?.content,
-      isQnoVisible: props.context?.isQnoVisible,
+      question: {
+        no: props.context?.qno,
+        content: props.context.content
+      },
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
-      isShow: h?.visibility,
-      visible: h?.visible,
-      anchor: h?.anchor,
+      isShow,
       helpeText: message,
-      answer,
-      getOptsUiComp
+      getOptsUiComp,
+      answer
     }
   },
   components: {

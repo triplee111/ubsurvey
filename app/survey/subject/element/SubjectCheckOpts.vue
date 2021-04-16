@@ -1,42 +1,41 @@
 <template lang="pug">
-.optionBlock(v-bind="$attrs"
+.optionBlock(
+  v-bind="$attrs"
   :style="`--rowCount: ${rowCount}`")
   .options(
     v-for="(opt, key) in opts"
-    :key="`opt-${key + 1}`")
+    :key="`opt-${opt.id}`")
     input(
-      v-model="selected"
-      :id="`checkbox-${key + 1}`"
+      v-model="answer.select"
+      :id="`checkbox-${opt.id}`"
       :value="opt.id"
       type="checkbox"
       @change="onChange(key)")
-    label(:for="`checkbox-${key + 1}`")
+
+    label(:for="`checkbox-${opt.id}`")
       p
         span.checkmark
         span.optionText {{ opt.item }}
       .other(v-if="(key === opts.length - 1) && config.others")
         input(
-          v-model="otherText"
-          ref="otherRef"
-          type="text"
-          @input="onChange")
+          v-model="answer.inputs"
+          ref="othersInputField"
+          type="text")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRefs } from 'vue'
-import useRowCounter from '../../utils/row-count-helper'
-import { useStore } from 'vuex'
+import { defineComponent, PropType, ref, computed } from 'vue'
 
-import { Option, SubjectConfig, Obj, SubjectAnswer } from '@/types'
+import { Option, SubjectConfig, SubjectAnswer } from '@/types'
+import useRowCounter from '@/survey/utils/row-count-helper'
 
 export default defineComponent({
   name: 'SubjectCheckOpts',
-  emits: ['updateSelect'], // defined custom event
   props: {
-    qid: {
-      type: Number,
-      default: 0
+    ans: {
+      type: Object as PropType<SubjectAnswer>,
+      required: true
     },
     opts: {
       type: Object as PropType<Option[]>,
@@ -44,45 +43,30 @@ export default defineComponent({
     },
     config: Object as PropType<SubjectConfig>
   },
-  setup(_props, { emit }) {
-    const selected = ref<number[]>([])
-    const otherText = ref<string>('')
-    const otherRef = ref<HTMLElement>()
-    const { qid, config, opts } = toRefs(_props)
-
-    const optLength = opts.value.length
-    const column = config?.value?.optsColumn as Obj
-    const rowCounter = useRowCounter(optLength, column)
-
-    const store = useStore()
-    const ans = store.state.survey.surveyAns[qid.value]
-    if (ans) {
-      if (ans.select) {
-        selected.value = ans.select
-      }
-      if (ans.inputs) {
-        otherText.value = ans.inputs
-      }
+  setup(props, { emit }) {
+    const othersInputField = ref<HTMLElement>(document.createElement('input'))
+    const columnsConfig = props.config?.optsColumn ?? {
+      desktop: 2,
+      mobile: 1
     }
+    const rowCounter = useRowCounter(props.opts.length, columnsConfig)
 
-    const onChange = (key: number): void => {
-      if (key === optLength - 1) {
-        otherRef.value?.focus()
+    const answer = computed({
+      get: () => props.ans,
+      set: (value: SubjectAnswer) => {
+        emit('update:ans', value)
       }
-      const payload: SubjectAnswer = {
-        select: selected.value
+    })
+
+    const onChange = (key: number) => {
+      if (props.config?.others && key === props.opts.length - 1) {
+        othersInputField.value?.focus()
       }
-      const hasOther = selected.value.find(id => id === opts.value[optLength - 1].id)
-      if (hasOther && config?.value?.others) {
-        payload.inputs = otherText.value
-      }
-      emit('updateSelect', payload)
     }
 
     return {
-      selected,
-      otherText,
-      otherRef,
+      answer,
+      othersInputField,
       rowCount: rowCounter.rowCount,
       onChange
     }

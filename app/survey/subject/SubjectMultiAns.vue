@@ -3,32 +3,28 @@ SubjectLayout(v-if="isShow")
   template(#question)
     SubjectQuestion(
       :id="`question-${qid}`"
-      :qno="qno"
-      :content="qContent"
-      :isQnoVisible="isQnoVisible"
-    )
+      :que="question")
 
   template(#helper)
     span.errorMessage(v-show="helpeText") {{ helpeText }}
 
   template(#answer)
     CheckOpts(
-      :qid="qid"
+      v-model:ans="answer"
       :opts="opts"
-      :config="config"
-      @updateSelect="answer")
+      :config="config")
 
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed } from 'vue'
+import { defineComponent, PropType, computed, watch } from 'vue'
 
 import { Subject, SubjectAnswer } from '@/types'
 
 import useSubjectHandler from '@/survey/subject'
-import SubjectLayout from './element/SubjectLayout.vue'
-import CheckOpts from './element/SubjectCheckOpts.vue'
+import SubjectLayout from './common/SubjectLayout.vue'
 import SubjectQuestion from './element/SubjectQuestion.vue'
+import CheckOpts from './element/SubjectCheckOpts.vue'
 
 export default defineComponent({
   name: 'SubjectMultiAns',
@@ -41,26 +37,65 @@ export default defineComponent({
   setup(props) {
     const h = useSubjectHandler(props.context)
 
-    const message = computed(() =>
-      h.errors.value.length ? '此栏位为必填栏位' : ''
-    )
+    const isShow = h.visibility
+    const answer = h.init()
 
-    const answer = (payload: SubjectAnswer) => {
-      h.anchor()
-      h.reply(payload)
-    }
+    const message = computed(() => {
+      if (h.errors.value.length) {
+        const error = h.errors.value.shift() // 只選擇第一個錯誤顯示提示
+
+        if (error?.rule === 'optsRange') {
+          const { min, max } = error.config
+
+          if (min === max) {
+            return `请选择 ${max} 个选项`
+          }
+
+          if (min === 0) {
+            return `最多可选择 ${max} 个选项`
+          }
+
+          return `请选择 ${min} 到 ${max} 个选项`
+        }
+
+        return '此题为必选题目'
+      }
+    })
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    let unwatchAns: () => void = () => {}
+
+    watch(
+      isShow,
+      (value: boolean) => {
+        if (value) {
+          unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            h.anchor()
+            h.reply(value)
+          })
+        } else {
+          unwatchAns()
+          ;(answer as { select: [] }).select = []
+
+          if (Object.prototype.hasOwnProperty.call(answer, 'inputs')) {
+            delete (answer as { inputs?: string }).inputs
+          }
+        }
+      },
+      { immediate: true }
+    )
 
     return {
       // static
       qid: props.context?.id,
-      qno: props.context?.qno,
-      qContent: props.context?.content,
-      isQnoVisible: props.context?.isQnoVisible,
+      question: {
+        no: props.context?.qno,
+        content: props.context.content
+      },
       opts: props.context?.opts,
       config: props.context?.config,
       // reactive and methods
-      isShow: h?.visibility,
-      visible: h?.visible,
+      isShow,
       helpeText: message,
       answer
     }

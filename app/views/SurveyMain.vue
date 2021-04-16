@@ -1,42 +1,138 @@
 <template lang="pug">
 #survey
-  .title 填问卷 豪礼三选一
-  .subTitle 礼品、彩金、高额存送任您挑
+  .title {{ info.title }}
+  .subTitle {{ info.intro }}
 
-  .scrollContainer(v-perfect-scroll)
+  #survey-container.scrollContainer
     .titleBlock
-      .mbTitle 填问卷 豪礼三选一
-      .mbSubTitle 礼品、彩金、高额存送任您挑
+      .mbTitle {{ info.title }}
+      .mbSubTitle {{ info.intro }}
 
     SurveyContainer(
       v-if="surveyData.length"
-      :survey="surveyData")
-
-    //- TODO: suspend
+      :survey="surveyData"
+      scrollContainer="#survey-container"
+      @confirmed="showConfirm")
 
 ModalContainer
 
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
-import ModalContainer from '@act/slime-modal'
+import Noty from 'noty'
+import {
+  defineComponent,
+  ref,
+  watch,
+  onMounted,
+  provide,
+  inject,
+  Ref
+} from 'vue'
+import { useRouter } from 'vue-router'
+import ModalContainer, { useModal } from '@act/slime-modal'
+import PerfectScrollbar from '@act/perfect-scrollbar'
 
 import { Survey } from '@/types'
 
+import svService from '@/repository/survey'
+import { device } from '@/survey/utils/window-size-observer'
 import SurveyContainer from '@/survey/index'
-import surveyService from '@/mock/index'
 
 export default defineComponent({
   name: 'SurveyMain',
   async setup() {
-    const surveyData: Ref<Survey> = ref([])
+    const router = useRouter()
+    const modal = useModal()
 
-    const data = await surveyService
-    surveyData.value = data
+    const info = ref({
+      title: '填问卷 豪礼三选一',
+      intro: '礼品、彩金、高额存送任您挑'
+    })
+    const confirm = ref('')
+    const surveyData: Ref<Survey> = ref([])
+    const token = inject<string>('token')
+    const timestart = ref(0)
+
+    provide('timestart', timestart)
+
+    onMounted(() => {
+      setTimeout(() => {
+        const ps = new PerfectScrollbar('#survey-container')
+        let unwatch: () => void
+
+        if (device.value === 'mobile') {
+          unwatch = watch(router.currentRoute, () =>
+            setTimeout(() => ps.update(), 0)
+          )
+        }
+
+        watch(device, value => {
+          if (unwatch) {
+            unwatch()
+          }
+
+          setTimeout(() => ps.update(), 0)
+
+          if (value === 'mobile') {
+            unwatch = watch(router.currentRoute, () =>
+              setTimeout(() => ps.update(), 0)
+            )
+          }
+        })
+      }, 300)
+    })
+
+    if (!token) {
+      new Noty({
+        type: 'error',
+        layout: 'topCenter',
+        theme: 'nest',
+        text: '问卷接口错误，请确认 token 是否存在与是否正确',
+        timeout: 1500,
+        id: 'noty-error'
+      }).show()
+    }
+
+    try {
+      const data = await svService.getSurvey(token as string)
+
+      surveyData.value = data.ques
+
+      info.value = {
+        title: data.title || info.value.title,
+        intro: data.intro || info.value.intro
+      }
+      confirm.value = data.confirm
+      timestart.value = data.mark
+    } catch (err) {
+      new Noty({
+        type: 'error',
+        layout: 'topCenter',
+        theme: 'nest',
+        text: err.data || '伺服器错误，请稍候再试',
+        timeout: 1500,
+        id: 'noty-error'
+      }).show()
+    }
+
+    const showConfirm = (payload: { isValid: boolean; message?: string }) => {
+      if (payload.isValid && !payload.message) {
+        modal.show('confirm', {
+          params: {
+            ...payload,
+            message: confirm.value
+          }
+        })
+      } else {
+        modal.show('confirm', { params: payload })
+      }
+    }
 
     return {
-      surveyData
+      info,
+      surveyData,
+      showConfirm
     }
   },
   components: {

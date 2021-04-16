@@ -3,7 +3,10 @@ import { IVerify, ValidatorOptions } from '@/types'
 export default (
   fn: IVerify,
   opts: ValidatorOptions,
-  config: number[]
+  config: {
+    min: number
+    max: number
+  }
 ): IVerify => {
   return (ans, errors = []) => {
     // break 開啟時，已有驗證錯誤就直接回傳
@@ -14,7 +17,7 @@ export default (
     // 驗證規則
     if (
       Array.isArray(ans.select) &&
-      (ans.select.length < config[0] || ans.select.length > config[0])
+      (ans.select.length < config.min || ans.select.length > config.max)
     ) {
       errors?.push({
         rule: 'optsRange',

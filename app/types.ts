@@ -2,10 +2,6 @@
 
 export type ExternalLinks = { [porp: string]: string }
 
-export type Obj = {
-  [key: string]: number
-}
-
 export type DropdwonStyle = {
   width: string
   top: string
@@ -41,8 +37,8 @@ export interface IResizeCallBack {
 export interface Option {
   id: number
   item: string
-  jumpTo?: number // 跳題
-  concatTo?: number // 接題
+  jump?: number[] // 跳題
+  concat?: number[] // 接題
 }
 
 export interface ValidateRules {
@@ -75,7 +71,6 @@ export interface Subject {
   content: string
   comment?: string
   visible: boolean
-  isQnoVisible: boolean
   validate?: ValidateRules
   opts?: Option[]
   config?: SubjectConfig
@@ -85,7 +80,7 @@ export type Survey = Subject[]
 
 // survey store interface
 export interface SubjectAnswer {
-  select?: number[]
+  select?: number | number[]
   inputs?: string
 }
 

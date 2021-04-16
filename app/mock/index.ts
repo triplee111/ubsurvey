@@ -6,7 +6,6 @@ const surveyData: Survey = [
     content: '段落標題',
     comment: '',
     type: 'quote',
-    isQnoVisible: true,
     visible: true,
     config: {
       quote: '段落說明'
@@ -18,7 +17,6 @@ const surveyData: Survey = [
     content: '題目1',
     comment: '備註',
     type: 'choice',
-    isQnoVisible: true,
     visible: true,
     validate: {
       required: true
@@ -51,11 +49,47 @@ const surveyData: Survey = [
     ]
   },
   {
+    id: 16,
+    qno: 2,
+    content: '題目2',
+    comment: '備註',
+    type: 'choice',
+    visible: true,
+    validate: {
+      required: true
+    },
+    config: {
+      others: true,
+      optsUi: 'radiobox',
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
+    },
+    opts: [
+      {
+        id: 44,
+        item: '選項5'
+      },
+      {
+        id: 45,
+        item: '選項6'
+      },
+      {
+        id: 46,
+        item: '選項7'
+      },
+      {
+        id: 47,
+        item: '選項8'
+      }
+    ]
+  },
+  {
     id: 20,
     content: '分隔線/分頁',
     comment: '',
     type: 'divider',
-    isQnoVisible: true,
     visible: true
   },
   {
@@ -63,7 +97,6 @@ const surveyData: Survey = [
     content: '段落標題二',
     comment: '',
     type: 'quote',
-    isQnoVisible: true,
     visible: true,
     config: {
       quote: '段落說明二'
@@ -71,11 +104,10 @@ const surveyData: Survey = [
   },
   {
     id: 2,
-    qno: 2,
+    qno: 3,
     content: '題目2',
     comment: '備註',
     type: 'choice',
-    isQnoVisible: true,
     visible: true,
     validate: {
       required: true
@@ -113,7 +145,42 @@ const surveyData: Survey = [
     content: '題目3',
     comment: '備註',
     type: 'multi-answer',
-    isQnoVisible: true,
+    visible: true,
+    validate: {
+      required: true
+    },
+    config: {
+      others: true,
+      optsColumn: {
+        desktop: 2,
+        mobile: 1
+      }
+    },
+    opts: [
+      {
+        id: 55,
+        item: '選項1'
+      },
+      {
+        id: 56,
+        item: '選項2'
+      },
+      {
+        id: 57,
+        item: '選項3'
+      },
+      {
+        id: 58,
+        item: '選項4'
+      }
+    ]
+  },
+  {
+    id: 9,
+    qno: 4,
+    content: '題目4',
+    comment: '備註',
+    type: 'multi-answer',
     visible: true,
     validate: {
       required: true
@@ -146,11 +213,21 @@ const surveyData: Survey = [
   },
   {
     id: 4,
-    qno: 4,
-    content: '題目4',
+    qno: 7,
+    content: '題目7',
     comment: '備註',
     type: 'text-input',
-    isQnoVisible: true,
+    visible: true,
+    validate: {
+      required: true
+    }
+  },
+  {
+    id: 14,
+    qno: 8,
+    content: '題目8',
+    comment: '備註',
+    type: 'text-input',
     visible: true,
     validate: {
       required: true
