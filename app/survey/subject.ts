@@ -66,10 +66,6 @@ export default (subject: Subject) => {
           }
         }
       }
-
-      const added = Array.isArray(select)
-        ? difference(select, preSelect as number[])
-        : [select]
     }
 
     const added = Array.isArray(select)
