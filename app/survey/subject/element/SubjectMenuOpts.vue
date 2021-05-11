@@ -38,14 +38,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  ref,
-  computed,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+import { defineComponent, PropType, ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 import { Option, SubjectConfig, DropdwonStyle, SubjectAnswer } from '@/types'
 import { device } from '@/survey/utils/window-size-observer'
@@ -58,8 +51,8 @@ export default defineComponent({
       required: true
     },
     opts: {
-      type: Object as PropType<Option[]>,
-      default: []
+      type: Array as PropType<Option[]>,
+      default: () => []
     },
     config: Object as PropType<SubjectConfig>
   },
@@ -76,9 +69,7 @@ export default defineComponent({
     })
 
     const currentText = computed(() => {
-      const opt = props.opts.find(
-        opt => answer.value && opt.id === answer.value.select
-      )
+      const opt = props.opts.find(opt => answer.value && opt.id === answer.value.select)
       return opt ? opt.item : '尚未选择'
     })
 

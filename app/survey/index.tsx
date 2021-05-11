@@ -18,8 +18,8 @@ export default defineComponent({
   props: {
     // 問卷資料
     survey: {
-      type: Object as PropType<Survey>,
-      default: []
+      type: Array as PropType<Survey>,
+      default: () => []
     },
     // parent route name
     parentRouteName: {

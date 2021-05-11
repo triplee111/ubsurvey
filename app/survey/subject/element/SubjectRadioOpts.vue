@@ -38,8 +38,8 @@ export default defineComponent({
       required: true
     },
     opts: {
-      type: Object as PropType<Option[]>,
-      default: []
+      type: Array as PropType<Option[]>,
+      default: () => []
     },
     config: Object as PropType<SubjectConfig>
   },
