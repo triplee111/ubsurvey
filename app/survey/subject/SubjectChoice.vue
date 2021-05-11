@@ -44,9 +44,7 @@ export default defineComponent({
 
     // Container & Validator 不負責產生提示顯示文案
     // 由個別元件控制或額外設定文案機制
-    const message = computed(() =>
-      h.errors.value.length ? '此题为必选题目' : ''
-    )
+    const message = computed(() => (h.errors.value.length ? '此题为必选题目' : ''))
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     let unwatchAns: () => void = () => {}
@@ -56,6 +54,17 @@ export default defineComponent({
       (value: boolean) => {
         if (value) {
           unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            if (
+              Object.prototype.hasOwnProperty.call(value, 'inputs') &&
+              props.context?.opts?.length
+            ) {
+              const optIdLast = props.context?.opts[props.context?.opts?.length - 1].id
+
+              if ((value.select as number) !== optIdLast) {
+                delete value.inputs
+              }
+            }
+
             h.anchor()
             h.reply(value)
           })

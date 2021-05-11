@@ -42,7 +42,7 @@ export default defineComponent({
 
     const message = computed(() => {
       if (h.errors.value.length) {
-        const error = h.errors.value.shift() // 只選擇第一個錯誤顯示提示
+        const error = h.errors.value[0] // 只選擇第一個錯誤顯示提示
 
         if (error?.rule === 'optsRange') {
           const { min, max } = error.config
@@ -60,6 +60,7 @@ export default defineComponent({
 
         return '此题为必选题目'
       }
+      return ''
     })
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -70,6 +71,17 @@ export default defineComponent({
       (value: boolean) => {
         if (value) {
           unwatchAns = watch(answer, (value: SubjectAnswer) => {
+            if (
+              Object.prototype.hasOwnProperty.call(value, 'inputs') &&
+              props.context?.opts?.length
+            ) {
+              const optIdLast = props.context?.opts[props.context?.opts?.length - 1].id
+
+              if (!(value.select as number[]).includes(optIdLast)) {
+                delete value.inputs
+              }
+            }
+
             h.anchor()
             h.reply(value)
           })
