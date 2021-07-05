@@ -13,6 +13,8 @@
       :survey="surveyData"
       scrollContainer="#survey-container"
       @confirmed="showConfirm")
+    
+    div(@click="modal('login')") test
 
 ModalContainer
 
@@ -132,7 +134,8 @@ export default defineComponent({
     return {
       info,
       surveyData,
-      showConfirm
+      showConfirm,
+      modal: modal.show
     }
   },
   components: {

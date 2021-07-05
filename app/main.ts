@@ -19,6 +19,7 @@ import actService from '@/repository/activity'
 const EXTERNAL_LINKS = {
   osLink: '#',
   csLink: '#',
+  regLink: '#',
   appLink: '#',
   testLink: '#',
   epayLink: '#',

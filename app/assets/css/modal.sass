@@ -1,4 +1,4 @@
-#ModalConfirm
+#ModalConfirm,#ModalLogin
   position: relative
   width: 408px
   height: 251px
@@ -16,7 +16,7 @@
     max-width: unset
     &.material
       top: -96px
-      left: -64px
+      left: -90px
       width: 540px
       pointer-events: none
     &.modalClose
@@ -30,7 +30,7 @@
   >p
     display: flex
     flex-direction: column
-  .goback
+  .goback,.loginBtn
     margin-top: 20px
     padding: 0 1rem
     line-height: 2
@@ -56,3 +56,53 @@
         width: 28vmin
         top: -31%
         left: -17%
+  .loginGroups
+    +setFlex
+    flex-direction: column
+    +iphone-width
+      width: 75%
+    > p
+      +iphone-width
+        font-size: 5.5vmin
+    input
+      width: 300px
+      max-width: 100%
+      height: 45px
+      border-radius: 8px
+      font-size: 20px
+      font-weight: bold
+      text-align: center
+      border: 2px solid #888888
+      margin: 24px auto 14px
+      +iphone-width
+        width: 100%
+        font-size: 4vmin
+        margin: 3vmin auto 0
+    a.signup
+      +setFlex
+      font-size: 14px
+      color: #1b5245
+      img
+        position: relative
+    .loginBtn
+      margin: 0 auto 16px
+      +iphone-width
+        margin: 0 auto 2vmin
+    .error-msg
+      color: #1c1d10
+      margin-bottom: 10px
+      text-align: center
+      font-size: 14px
+      +iphone-width
+        font-size: 3.5vmin
+        margin: 1.5vmin auto
+
+#ModalLogin
+  background-size: 100% 100%
+  height: auto
+  padding: 40px 0
+  +iphone-width
+    padding: 8vmin 0
+  img.material
+    +iphone-width
+      top: -22%
