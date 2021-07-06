@@ -41,20 +41,19 @@ export default defineComponent({
   name: 'ModalLogin',
   setup(_props, { emit }) {
     const links = inject('links') as ExternalLinks
+
     const store = useStore()
     const account = computed(() => store.state.auth.user.account)
+
     const accountVal = ref('')
+
     const auth = useAuth()
     const signin = auth.signin
     const authProgress = auth.authProgress
     const errorMsg = auth.errorMsg
 
     watch(account, (value: string) => {
-      if (value) {
-        // store.dispatch('')
-
-        emit('close')
-      }
+      if (value) emit('close')
     })
 
     return {

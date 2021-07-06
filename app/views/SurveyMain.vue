@@ -13,8 +13,6 @@
       :survey="surveyData"
       scrollContainer="#survey-container"
       @confirmed="showConfirm")
-    
-    div(@click="modal('login')") test
 
 ModalContainer
 
@@ -59,6 +57,8 @@ export default defineComponent({
     provide('timestart', timestart)
 
     onMounted(() => {
+      modal.show('login')
+
       setTimeout(() => {
         const ps = new PerfectScrollbar('#survey-container')
         let unwatch: () => void
@@ -134,8 +134,7 @@ export default defineComponent({
     return {
       info,
       surveyData,
-      showConfirm,
-      modal: modal.show
+      showConfirm
     }
   },
   components: {
