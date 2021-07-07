@@ -1,10 +1,10 @@
 <template lang="pug">
 #ModalLogin
   img.material(src="@img/material-after.png")
-  img.modalClose(
-    src="@img/close.png"
-    @click="$emit('close')"
-  )
+  //- img.modalClose(
+  //-   src="@img/close.png"
+  //-   @click="$emit('close')"
+  //- )
 
   img.poker(src="@img/card-before.png")
 
@@ -16,8 +16,7 @@
       placeholder="输入会员帐号"
       :disabled="authProgress"
       v-model.trim="accountVal"
-      @enter="signin(accountVal)"
-    )
+      @enter="signin(accountVal)")
 
     .error-msg {{ errorMsg }}
 
