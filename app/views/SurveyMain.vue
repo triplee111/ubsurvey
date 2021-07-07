@@ -57,6 +57,8 @@ export default defineComponent({
     provide('timestart', timestart)
 
     onMounted(() => {
+      modal.show('login')
+
       setTimeout(() => {
         const ps = new PerfectScrollbar('#survey-container')
         let unwatch: () => void
