@@ -28,8 +28,11 @@
 </template>
 
 <script lang="ts">
+import Noty from 'noty'
 import { defineComponent, inject, ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
+
+import svService from '@/repository/survey'
 
 import useAuth from '@/components/auth'
 import { AuthInput } from '@/components/auth/index'
@@ -40,6 +43,7 @@ export default defineComponent({
   name: 'ModalLogin',
   setup(_props, { emit }) {
     const links = inject('links') as ExternalLinks
+    const token = inject<string>('token')
 
     const store = useStore()
     const account = computed(() => store.state.auth.user.account)
@@ -51,8 +55,26 @@ export default defineComponent({
     const authProgress = auth.authProgress
     const errorMsg = auth.errorMsg
 
-    watch(account, (value: string) => {
-      if (value) emit('close')
+    watch(account, async (value: string) => {
+      if (value) {
+        try {
+          await svService.getSurvey(
+            token as string,
+            store.state.auth.user.account
+          )
+
+          emit('close')
+        } catch (err) {
+          new Noty({
+            type: 'error',
+            layout: 'topCenter',
+            theme: 'nest',
+            text: err.data || '伺服器错误，请稍候再试',
+            timeout: 1500,
+            id: 'noty-error'
+          }).show()
+        }
+      }
     })
 
     return {

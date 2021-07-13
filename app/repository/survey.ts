@@ -5,7 +5,12 @@ import { SubjectAnswer } from '@/types'
 
 const service = useAgent<AxiosRequestConfig>()
 
-const getSurvey = (token: string) => {
+const getSurvey = (token: string, user = '') => {
+  if (user) {
+    return service.get(
+      `fsv/s/t/${token}/u/${user}/p/${process.env.PROJ_PLATFORM}`
+    )
+  }
   return service.get(`fsv/s/t/${token}/p/${process.env.PROJ_PLATFORM}`)
 }
 
